@@ -15,7 +15,7 @@ spec:
   icon: 'https://avatars.githubusercontent.com/u/5549034?s=48&v=4'
   templateType: inline
   categories:
-    - blog
+    - Forum
   defaults:
     app_host:
       type: string
@@ -61,7 +61,7 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 500m
+          cpu: 300m
           memory: 512Mi
         requests:
           cpu: 100m

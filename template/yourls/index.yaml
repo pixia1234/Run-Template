@@ -1,20 +1,20 @@
-iapiVersion: app.claw.cloud/v1
+apiVersion: app.claw.cloud/v1
 kind: Template
 metadata:
   name: yourls
 spec:
   title: 'YOURLS'
   type: official
-  url: 'https://yourls.org/'
   author: ClawCloud Run
   author_id: 180503656
   date: 2025-05-16
+  url: 'https://yourls.org/'
   gitRepo: 'https://github.com/YOURLS/YOURLS'
   description: 'YOURLS is a set of PHP scripts that will allow you to run Your Own URL Shortener, on your server.'
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/yourls/README.md'
   icon: 'https://yourls.org/assets/images/favicon.svg'
   templateType: inline
-  locale: en'
+  locale: en
   categories:
     - tool
   defaults:

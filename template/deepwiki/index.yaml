@@ -8,11 +8,11 @@ spec:
   author: ClawCloud Run
   author_id: 180503656
   date: 2025-05-16
-  url: 'https://github.com/yourorg/deepwiki'
-  gitRepo: 'https://github.com/yourorg/deepwiki'
+  url: 'https://deepwiki.org'
+  gitRepo: 'https://github.com/AsyncFuncAI/deepwiki-open'
   description: 'DeepWiki: an embedding-backed wiki powered by Node.js (API) and Next.js (frontend).'
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/deepwiki/README.md'
-  icon: 'https://raw.githubusercontent.com/yourorg/deepwiki/main/logo.png'
+  icon: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/deepwiki/deepwiki.png'
   templateType: inline
   locale: en
   categories:

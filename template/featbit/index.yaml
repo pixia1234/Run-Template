@@ -1,0 +1,693 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: featbit-standard
+spec:
+  title: "Featbit Standard"
+  type: official
+  author: ClawCloud Run
+  author_id: 180503656
+  date: 2025-05-26
+  url: "https://www.featbit.cn/"
+  gitRepo: "https://github.com/featbit/featbit"
+  description: "Featbit open-source feature flag & analytics platform (Standard Edition)."
+  readme: "https://raw.githubusercontent.com/ClawCloud/Run-Template/main/template/featbit/README.md"
+  icon: "https://avatars.githubusercontent.com/u/83843514?s=200&v=4"
+  templateType: inline
+  locale: en
+  categories:
+    - tools
+  defaults:
+    app_host:
+      type: string
+      value: ${{ random(8) }}
+    app_name:
+      type: string
+      value: featbit-${{ random(8) }}
+    app_host_api:
+      type: string
+      value: ${{ random(8) }}
+    app_host_eval:
+      type: string
+      value: ${{ random(8) }}
+  inputs:
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-api-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-api-server
+spec:
+  selector:
+    app: ${{ defaults.app_name }}-api-server
+  ports:
+    - port: 5000
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-da-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-da-server
+spec:
+  selector:
+    app: ${{ defaults.app_name }}-da-server
+  ports:
+    - port: 8200
+      targetPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-eval-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-eval-server
+spec:
+  selector:
+    app: ${{ defaults.app_name }}-eval-server
+  ports:
+    - port: 5100
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-ui
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-ui
+spec:
+  selector:
+    app: ${{ defaults.app_name }}-ui
+  ports:
+    - port: 80
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}-api-server
+  annotations:
+    originImageName: featbit/featbit-api-server:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-api-server
+    app: ${{ defaults.app_name }}-api-server
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-api-server
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-api-server
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-api-server
+          image: featbit/featbit-api-server:latest
+          env:
+            - name: DbProvider
+              value: "Postgres"
+            - name: MqProvider
+              value: "Redis"
+            - name: CacheProvider
+              value: "Redis"
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: username
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: host
+            - name: Postgres__ConnectionString
+              value: Host=(POSTGRES_HOST);Port=5432;Username=(POSTGRES_USER);Password=(PG_PASSWORD);Database=featbit
+            - name: REDIS_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: endpoint
+            - name: REDIS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: username
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: password
+            - name: Redis__ConnectionString
+              value: $(REDIS_ENDPOINT),password=$(REDIS_PASSWORD),user=$(REDIS_USERNAME)
+            - name: OLAP__ServiceHost
+              value: "http://da-server"
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          imagePullPolicy: IfNotPresent
+          volumeMounts: []
+      volumes: []
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}-da-server
+  annotations:
+    originImageName: featbit/featbit-data-analytics-server:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-da-server
+    app: ${{ defaults.app_name }}-da-server
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-da-server
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-da-server
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-da-server
+          image: featbit/featbit-data-analytics-server:latest
+          env:
+            - name: DB_PROVIDER
+              value: Postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: password
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: port
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: username
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: host
+            - name: POSTGRES_DATABASE
+              valeu: featbit
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: host
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: port
+            - name: REDIS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: username
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: password
+            - name: REDIS_DB
+              value: "0"
+            - name: CHECK_DB_LIVNESS
+              value: true
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          imagePullPolicy: IfNotPresent
+          volumeMounts: []
+      volumes: []
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}-eval-server
+  annotations:
+    originImageName: featbit/featbit-evaluation-server:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-eval-server
+    app: ${{ defaults.app_name }}-eval-server
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-eval-server
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-eval-server
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-eval-server
+          image: featbit/featbit-evaluation-server:latest
+          env:
+            - name: DbProvider
+              value: "Postgres"
+            - name: MqProvider
+              value: "Redis"
+            - name: CacheProvider
+              value: "Redis"
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: username
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: host
+            - name: Postgres__ConnectionString
+              value: Host=(POSTGRES_HOST);Port=5432;Username=(POSTGRES_USER);Password=(PG_PASSWORD);Database=featbit
+            - name: REDIS_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: endpoint
+            - name: REDIS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: username
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: password
+            - name: Redis__ConnectionString
+              value: $(REDIS_ENDPOINT),password=$(REDIS_PASSWORD),user=$(REDIS_USERNAME)
+          ports:
+            - containerPort: 5100
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          imagePullPolicy: IfNotPresent
+          volumeMounts: []
+      volumes: []
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}-ui
+  annotations:
+    originImageName: featbit/featbit-ui:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-ui
+    app: ${{ defaults.app_name }}-ui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-ui
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-ui
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-ui
+          image: featbit/featbit-ui:latest
+          env:
+            - name: DEMO_URL
+              value: https://featbit-samples.vercel.app
+            - name: API_URL
+              value: https://${{ defaults.app_host_api }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+            - name: EVALUATION_URL
+              value: https://${{ defaults.app_host_eval }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          imagePullPolicy: IfNotPresent
+          volumeMounts: []
+    volumes: []
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}-api-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-api-server
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host_api }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_uri ~* \.(js|css|gif|jpe?g|png)) {
+        expires 30d;
+        add_header Cache-Control "public";
+      }
+spec:
+  tls:
+    - hosts:
+        - ${{ defaults.app_host_api }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+  rules:
+    - host: ${{ defaults.app_host_api }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}-api-server
+                port:
+                  number: 5000
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}-eval-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-eval-server
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host_eval }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: ${{ defaults.app_host_eval }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}-eval-server
+                port:
+                  number: 5100
+  tls:
+    - hosts:
+        - ${{ defaults.app_host_eval }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}-ui
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-ui
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}-ui
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: apps.kubeblocks.io/v1alpha1
+kind: Cluster
+metadata:
+  finalizers:
+    - cluster.kubeblocks.io/finalizer
+  labels:
+    clusterdefinition.kubeblocks.io/name: postgresql
+    clusterversion.kubeblocks.io/name: postgresql-14.8.0
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+  annotations: {}
+  name: ${{ defaults.app_name }}-pg
+spec:
+  affinity:
+    nodeLabels: {}
+    podAntiAffinity: Preferred
+    tenancy: SharedNode
+    topologyKeys: []
+  clusterDefinitionRef: postgresql
+  clusterVersionRef: postgresql-14.8.0
+  componentSpecs:
+    - componentDefRef: postgresql
+      monitor: true
+      name: postgresql
+      replicas: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 102Mi
+      serviceAccountName: ${{ defaults.app_name }}-pg
+      switchPolicy:
+        type: Noop
+      volumeClaimTemplates:
+        - name: data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+
+  terminationPolicy: Delete
+  tolerations: []
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - '*'
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ${{ defaults.app_name }}-pg
+subjects:
+  - kind: ServiceAccount
+    name: ${{ defaults.app_name }}-pg
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - '*'
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ${{ defaults.app_name }}-redis
+subjects:
+  - kind: ServiceAccount
+    name: ${{ defaults.app_name }}-redis
+
+---
+
+apiVersion: apps.kubeblocks.io/v1alpha1
+kind: Cluster
+metadata:
+  finalizers:
+    - cluster.kubeblocks.io/finalizer
+  labels:
+    clusterdefinition.kubeblocks.io/name: redis
+    clusterversion.kubeblocks.io/name: redis-7.0.6
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+  annotations: {}
+  name: ${{ defaults.app_name }}-redis
+spec:
+  affinity:
+    nodeLabels: {}
+    podAntiAffinity: Preferred
+    tenancy: SharedNode
+    topologyKeys: []
+  clusterDefinitionRef: redis
+  clusterVersionRef: redis-7.0.6
+  componentSpecs:
+    - componentDefRef: redis
+      monitor: true
+      name: redis
+      replicas: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 400Mi
+      serviceAccountName: ${{ defaults.app_name }}-redis
+      switchPolicy:
+        type: Noop
+      volumeClaimTemplates:
+        - name: data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 3Gi
+
+    - componentDefRef: redis-sentinel
+      monitor: true
+      name: redis-sentinel
+      replicas: 1
+      resources:
+        limits:
+          cpu: 100m
+          memory: 100Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      serviceAccountName: ${{ defaults.app_name }}-redis
+  terminationPolicy: Delete
+  tolerations: []

@@ -1,40 +1,30 @@
 apiVersion: app.claw.cloud/v1
 kind: Template
 metadata:
-  name: shlink
+  name: mattermost
 spec:
-  title: 'Shlink'
+  title: 'Mattermost'
   type: official
   author: ClawCloud Run
   author_id: 180503656
-  date: 2025-05-14
-  url: 'https://shlink.io/'
-  gitRepo: 'https://github.com/shlinkio/shlink'
-  description: 'A self-hosted URL shortener with QR code generation, analytics, and REST API.'
-  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/shlink/README.md'
-  icon: 'https://shlink.io/images/shlink-logo-blue.svg'
+  date: 2025-05-19
+  url: 'https://mattermost.com/'
+  gitRepo: 'https://github.com/mattermost/mattermost'
+  description: 'Mattermost is an open-source collaboration platform built for developer teams. It provides messaging, file sharing, and integrations with developer tools.'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/mattermost/README.md'
+  icon: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/mattermost/mattermost.svg'
   templateType: inline
   locale: en
   categories:
-    - web
+    - collaboration
+    - productivity
   defaults:
     app_name:
       type: string
-      value: shlink-${{ random(8) }}
+      value: mattermost-${{ random(8) }}
     app_host:
       type: string
       value: ${{ random(8) }}
-  inputs:
-    initial_api_key:
-      description: 'Initial API key'
-      type: string
-      default: ''
-      required: false
-    geolite_license_key:
-      description: 'GeoLite license key'
-      type: string
-      default: ''
-      required: false
 
 ---
 
@@ -53,16 +43,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ${{ defaults.app_name }}
-  annotations:
-    originImageName: ghcr.io/shlinkio/shlink:latest
-    deploy.run.claw.cloud/minReplicas: '1'
-    deploy.run.claw.cloud/maxReplicas: '1'
   labels:
     run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
     app: ${{ defaults.app_name }}
 spec:
   replicas: 1
-  revisionHistoryLimit: 2
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: ${{ defaults.app_name }}
@@ -71,47 +57,34 @@ spec:
       labels:
         app: ${{ defaults.app_name }}
     spec:
-      automountServiceAccountToken: false
       containers:
         - name: ${{ defaults.app_name }}
-          image: ghcr.io/shlinkio/shlink:latest
+          image: mattermost/mattermost-team-edition
+          imagePullPolicy: IfNotPresent
           env:
-            - name: INITIAL_API_KEY
-              value: ${{ inputs.initial_api_key }}
+            - name: MM_SERVICESETTINGS_SITEURL
+              value: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+            - name: MM_SQLSETTINGS_DRIVERNAME
+              value: postgres
             - name: PG_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: ${{ defaults.app_name }}-pg-conn-credential
                   key: password
-            - name: DB_DRIVER
-              value: postgres
-            - name: DB_NAME
-              value: shlink
-            - name: DB_USER
-              value: postgres
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ${{ defaults.app_name }}-pg-conn-credential
-                  key: password
-            - name: DB_HOST
-              value: ${{ defaults.app_name }}-pg-postgresql.${{ CLAWCLOUD_NAMESPACE }}.svc
-            - name: DB_PORT
-              value: "5432"
-            - name: DEFAULT_DOMAIN
-              value: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
-            - name: GEOIP_LICENSE_KEY
-              value: ${{ inputs.geolite_license_key }}
-          ports:
-            - containerPort: 8080
+            - name: MM_SQLSETTINGS_DATASOURCE
+              value: >-
+                postgresql://postgres:$(PG_PASSWORD)@${{ defaults.app_name }}-pg-postgresql.${{ CLAWCLOUD_NAMESPACE }}.svc:5432/postgres
           resources:
             requests:
               cpu: 100m
-              memory: 512Mi
+              memory: 256Mi
             limits:
-              cpu: 500m
-              memory: 2Gi
-          imagePullPolicy: IfNotPresent
+              cpu: 1000m
+              memory: 1Gi
+          ports:
+            - containerPort: 8065
+          volumeMounts: []
+      serviceAccountName: default
 
 ---
 
@@ -124,7 +97,7 @@ metadata:
 spec:
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 8065
   selector:
     app: ${{ defaults.app_name }}
 
@@ -139,13 +112,18 @@ metadata:
     run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
 spec:
   rules:
     - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
       http:
         paths:
-          - pathType: Prefix
-            path: /
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: ${{ defaults.app_name }}
@@ -245,3 +223,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: ${{ defaults.app_name }}-pg
+
