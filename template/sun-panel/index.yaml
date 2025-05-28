@@ -1,0 +1,127 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: sun-panel
+spec:
+  title: 'Sun-Panel'
+  type: official
+  author: hslr
+  author_id: 38iZaXmFFC
+  date: 2025-05-28
+  url: 'https://github.com/hslr-s/sun-panel'
+  gitRepo: 'https://github.com/hslr-s/sun-panel'
+  description: 'A NAS, server navigation panel, easy Docker manager, Homepage, and browser start page'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/sun-panel/README.md'
+  images:
+    - 'https://raw.githubusercontent.com/hslr-s/sun-panel/master/doc/images/main-dark.png'
+    - 'https://raw.githubusercontent.com/hslr-s/sun-panel/master/doc/images/icon-small-new.png'
+    - 'https://raw.githubusercontent.com/hslr-s/sun-panel/master/doc/images/transparent-info.png'
+  icon: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/sun-panel/logo.png'
+  templateType: inline
+  categories:
+    - tool
+    - nas
+    - docker-manager
+  defaults:
+    app_host:
+      type: string
+      value: ${{ random(8) }}
+    app_name:
+      type: string
+      value: sun-panel-${{ random(8) }}
+
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}
+  serviceName: ${{ defaults.app_name }}
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}
+    spec:
+      containers:
+        - name: ${{ defaults.app_name }}
+          image: hslr/sun-panel:latest
+          ports:
+            - containerPort: 3002
+          volumeMounts:
+            - name: app-data
+              mountPath: /app/conf
+  volumeClaimTemplates:
+    - metadata:
+        name: app-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi  # 这里大小可以根据实际情况调整
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  ports:
+    - port: 3002
+  selector:
+    app: ${{ defaults.app_name }}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${{ defaults.app_name }}
+                port:
+                  number: 3002
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: app.claw.cloud/v1
+kind: App
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  data:
+    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+  displayType: normal
+  icon: "https://raw.githubusercontent.com/hslr-s/sun-panel/master/doc/images/icon-small-new.png"
+  name: ${{ defaults.app_name }}
+  type: link
