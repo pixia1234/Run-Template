@@ -12,7 +12,7 @@ spec:
   gitRepo: 'https://github.com/refly-ai/refly'
   author: 'Sealos'
   description: 'Refly is an open-source AI-native creation engine powered by 13+ leading AI models.'
-  readme: 'https://raw.githubusercontent.com/refly-ai/refly/refs/heads/main/README.md'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/refly/README.md'
   icon: 'https://avatars.githubusercontent.com/u/132635806?s=48&v=4'
   templateType: inline
   locale: en
