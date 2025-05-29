@@ -4,7 +4,7 @@ metadata:
   name: sun-panel
 spec:
   title: 'Sun-Panel'
-  type: official
+  type: community
   author: hslr
   author_id: 38iZaXmFFC
   date: 2025-05-28
