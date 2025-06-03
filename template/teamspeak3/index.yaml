@@ -1,0 +1,169 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: teamspeak
+spec:
+  title: 'TeamSpeak Server'
+  type: community
+  author: omgpizzatnt
+  author_id: M9aYWMjaqO
+  date: 2025-06-03
+  url: 'https://www.teamspeak.com'
+  gitRepo: 'https://hub.docker.com/_/teamspeak'
+  description: 'TeamSpeak is a professional voice communication platform that provides crystal-clear voice quality, military-grade security, and low latency communication for gaming, business meetings, and community gatherings.'
+  icon: 'https://upload.wikimedia.org/wikipedia/commons/5/59/TeamSpeak_logo.svg'
+  templateType: inline
+  categories:
+    - tool
+  defaults:
+    app_host:
+      type: string
+      value: teamspeak-${{ random(8) }}
+    app_name:
+      type: string
+      value: teamspeak-${{ random(8) }}
+  inputs:
+    enable_query_port:
+      description: 'Enable NodePort for TCP Port 10011 (Server Query). DISABLED BY DEFAULT. Enable only if quota allows.'
+      type: boolean
+      default: "false"
+      required: false
+    enable_file_port:
+      description: 'Enable NodePort for TCP Port 30033 (File Transfer). DISABLED BY DEFAULT. Enable only if quota allows.'
+      type: boolean
+      default: "false"
+      required: false
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${{ defaults.app_name }}
+  annotations:
+    originImageName: teamspeak:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  minReadySeconds: 10
+  serviceName: ${{ defaults.app_name }}-headless
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}
+          image: teamspeak:latest
+          env:
+            - name: TS3SERVER_LICENSE
+              value: accept
+          ports:
+            - containerPort: 9987
+              protocol: UDP
+              name: voice
+            - containerPort: 10011
+              protocol: TCP
+              name: query
+            - containerPort: 30033
+              protocol: TCP
+              name: filetransfer
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: ts3server-data
+              mountPath: /var/ts3server
+      volumes: []
+  volumeClaimTemplates:
+    - metadata:
+        annotations:
+          path: /var/ts3server
+          value: '1'
+        name: ts3server-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-voice-nodeport
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  type: NodePort
+  ports:
+    - port: 9987
+      targetPort: 9987
+      protocol: UDP
+      name: voice-udp
+  selector:
+    app: ${{ defaults.app_name }}
+---
+${{ if(inputs.enable_query_port === "true") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-query-nodeport
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  type: NodePort
+  ports:
+    - port: 10011
+      targetPort: 10011
+      protocol: TCP
+      name: query-tcp
+  selector:
+    app: ${{ defaults.app_name }}
+${{ endif() }}
+---
+${{ if(inputs.enable_file_port === "true") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-file-nodeport
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  type: NodePort
+  ports:
+    - port: 30033
+      targetPort: 30033
+      protocol: TCP
+      name: file-tcp
+  selector:
+    app: ${{ defaults.app_name }}
+${{ endif() }}
+---
+apiVersion: app.claw.cloud/v1
+kind: App
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  displayType: normal
+  icon: "https://upload.wikimedia.org/wikipedia/commons/5/59/TeamSpeak_logo.svg"
+  name: ${{ defaults.app_name }}
+  type: link
