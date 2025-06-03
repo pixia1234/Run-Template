@@ -8,7 +8,7 @@ The template structure is organized as per the following directory tree:
 
 - **Application Template File** (YAML format): Defines the Kubernetes and application resources.
   
-- **Application README File** (Markdown format): Introduces the application and lists key features.
+- **Application README File** (Markdown format): Introduces the application and lists key features. Please do not include external links in the README file.
   
 - **Application Screenshots** (PNG format): Displays the primary interface of the application.
 
