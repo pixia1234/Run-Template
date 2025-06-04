@@ -4,39 +4,39 @@ Nextcloud is a self-hosted productivity platform that offers a wide range of fea
 
 ### Key Features
 
-- **Containerized Deployment**: Utilizes Docker to provide a streamlined and isolated environment for running Nextcloud, ensuring compatibility and reducing conflicts with existing systems.
+**Containerized Deployment**: Utilizes Docker to provide a streamlined and isolated environment for running Nextcloud, ensuring compatibility and reducing conflicts with existing systems.
   
-- **Highly Customizable**: Offers extensive configuration options to tailor the Nextcloud instance to specific needs, including storage backends, database choices, and app integrations.
+**Highly Customizable**: Offers extensive configuration options to tailor the Nextcloud instance to specific needs, including storage backends, database choices, and app integrations.
 
-- **Pre-Built Images**: Provides ready-to-use Docker images, enabling quick setup without requiring manual compilation or complex installations.
+**Pre-Built Images**: Provides ready-to-use Docker images, enabling quick setup without requiring manual compilation or complex installations.
 
-- **Scalability**: Supports scaling through Docker's ecosystem, allowing users to expand resources as demand grows, ensuring optimal performance under varying loads.
+**Scalability**: Supports scaling through Docker's ecosystem, allowing users to expand resources as demand grows, ensuring optimal performance under varying loads.
 
-- **Automated Updates**: Simplifies the process of keeping Nextcloud up-to-date by leveraging Docker's versioning and image update mechanisms.
+**Automated Updates**: Simplifies the process of keeping Nextcloud up-to-date by leveraging Docker's versioning and image update mechanisms.
 
-- **Enhanced Security**: Facilitates secure deployments by isolating services within containers, reducing the attack surface and enabling easier maintenance of security patches.
+**Enhanced Security**: Facilitates secure deployments by isolating services within containers, reducing the attack surface and enabling easier maintenance of security patches.
 
-- **Comprehensive Documentation**: Includes detailed instructions and examples to guide users through installation, configuration, and troubleshooting steps.
+**Comprehensive Documentation**: Includes detailed instructions and examples to guide users through installation, configuration, and troubleshooting steps.
 
-- **Active Community Support**: Backed by a vibrant open-source community, offering regular updates, contributions, and support to ensure reliability and innovation.
+**Active Community Support**: Backed by a vibrant open-source community, offering regular updates, contributions, and support to ensure reliability and innovation.
 
 This project is ideal for developers, IT professionals, and organizations seeking a robust, flexible, and modern solution for hosting their own private cloud infrastructure.
 
 ### Notice
 
-1.  Protect the login address: Set access restrictions to prevent unauthorized direct access.
+Protect the login address: Set access restrictions to prevent unauthorized direct access.
     
-2.  Use a complex password: Create a password that includes uppercase letters, lowercase letters, numbers, and special characters to increase cracking difficulty.
+Use a complex password: Create a password that includes uppercase letters, lowercase letters, numbers, and special characters to increase cracking difficulty.
     
-3.  Avoid common usernames: Refrain from using common usernames like "admin" or "root" to reduce the risk of brute-force attacks.
+Avoid common usernames: Refrain from using common usernames like "admin" or "root" to reduce the risk of brute-force attacks.
     
-4.  Regularly change passwords: It is recommended to update your password periodically to mitigate security risks associated with long-term usage of the same password.
+Regularly change passwords: It is recommended to update your password periodically to mitigate security risks associated with long-term usage of the same password.
     
-5.  Enable multi-factor authentication: Adopt two-factor authentication to add an extra layer of security beyond just the password.
+Enable multi-factor authentication: Adopt two-factor authentication to add an extra layer of security beyond just the password.
     
-6.  Limit login attempts: Set a maximum number of failed login attempts, and temporarily lock the account once it is exceeded to prevent brute-force attacks.
+Limit login attempts: Set a maximum number of failed login attempts, and temporarily lock the account once it is exceeded to prevent brute-force attacks.
     
-7.  Configure unusual login notifications: Set up alerts for abnormal login activity to be informed and respond promptly to potential security issues.
+Configure unusual login notifications: Set up alerts for abnormal login activity to be informed and respond promptly to potential security issues.
     
-8.  Conduct regular security audits: Periodically review account security logs and system configurations to quickly identify and fix potential vulnerabilities.
+Conduct regular security audits: Periodically review account security logs and system configurations to quickly identify and fix potential vulnerabilities.
         
