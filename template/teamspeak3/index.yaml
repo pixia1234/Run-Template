@@ -6,7 +6,7 @@ spec:
   title: 'TeamSpeak Server'
   type: community
   author: omgpizzatnt
-  author_id: M9aYWMjaqO
+  author_id: 80859414
   date: 2025-06-03
   url: 'https://www.teamspeak.com'
   gitRepo: 'https://hub.docker.com/_/teamspeak'
