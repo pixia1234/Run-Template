@@ -37,8 +37,13 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}
+  annotations:
+    originImageName: hslr/sun-panel:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
   labels:
     run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
 spec:
   replicas: 1
   selector:
@@ -55,11 +60,21 @@ spec:
           image: hslr/sun-panel:latest
           ports:
             - containerPort: 3002
+          resources:
+            requests:
+              cpu: 20m
+              memory: 12Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
           volumeMounts:
             - name: app-data
               mountPath: /app/conf
   volumeClaimTemplates:
     - metadata:
+        annotations:
+          path: /app/conf
+          value: '1'
         name: app-data
       spec:
         accessModes: [ "ReadWriteOnce" ]
@@ -122,6 +137,6 @@ spec:
   data:
     url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
   displayType: normal
-  icon: "https://raw.githubusercontent.com/hslr-s/sun-panel/master/doc/images/icon-small-new.png"
+  icon: "https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/sun-panel/logo.png"
   name: ${{ defaults.app_name }}
   type: link
