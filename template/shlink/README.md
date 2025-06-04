@@ -5,15 +5,25 @@ shlink is a powerful, self-hosted URL shortener built with PHP and designed to p
 ### Key Features
 
 **Self-Hosted Solution**: Fully hostable on your own infrastructure, ensuring complete control over your data and privacy.
+
 **RESTful API**: A comprehensive and well-documented API for seamless integration with external applications and services.
+
 **Multiple Database Support**: Compatible with various database systems, including MySQL, PostgreSQL, and SQLite, offering flexibility in deployment.
+
 **Customizable Short URLs**: Generate short URLs with custom slugs, allowing for branded and memorable links.
+
 **Detailed Analytics**: Track and analyze click statistics, including geolocation, referrers, and user agents, to gain insights into link performance.
+
 **QR Code Generation**: Automatically generate QR codes for any shortened URL, enhancing accessibility and usability.
+
 **Authentication and Security**: Secure access to the application with API key authentication and role-based access control.
+
 **CLI Tools**: Provides command-line utilities for managing URLs, tags, and other resources directly from the terminal.
+
 **Extensible via Plugins**: Supports additional functionality through plugins, enabling further customization to meet specific needs.
+
 **Docker Support**: Simplifies deployment with official Docker images, ensuring consistent environments across development and production.
+
 **Open Source**: Released under an open-source license, encouraging community contributions and fostering transparency.
 
 shlink is an ideal choice for developers and organizations seeking a reliable, feature-rich URL shortening solution that can be fully tailored to their requirements.

@@ -5,13 +5,21 @@ ILLA Builder is an open-source, low-code development platform designed to empowe
 ### Key Features
 
 **Low-Code Interface**: Simplify app creation with a user-friendly drag-and-drop editor that requires minimal coding knowledge.
+
 **Custom Code Integration**: Seamlessly incorporate custom JavaScript or CSS for advanced functionality and tailored designs.
+
 **Real-Time Collaboration**: Enable multiple users to work together in real-time, improving team productivity and project efficiency.
+
 **Extensible Component Library**: Access a rich library of pre-built UI components to quickly assemble polished interfaces.
+
 **Data Source Connectivity**: Connect to various databases, APIs, and third-party services effortlessly for dynamic data handling.
+
 **Cloud and Self-Hosting Options**: Deploy applications via ILLA Cloud or self-host the builder to meet specific organizational needs.
+
 **Cross-Platform Compatibility**: Ensure your applications run smoothly on different devices and browsers without additional effort.
+
 **Comprehensive Documentation**: Benefit from detailed guides and examples to accelerate learning and implementation.
+
 **Open-Source Community**: Leverage contributions and support from a vibrant community of developers and users worldwide.
 
 ILLA Builder is ideal for teams seeking to reduce development time while retaining control over their application's functionality and design. Its blend of simplicity and flexibility makes it a powerful tool for modern app development.

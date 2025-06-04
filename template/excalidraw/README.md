@@ -5,14 +5,23 @@ Excalidraw is a virtual whiteboard tool designed for sketching hand-drawn-like d
 ### Key Features
 
 **Hand-Drawn Style**: Creates diagrams that mimic the natural look and feel of hand-drawn sketches, providing a unique aesthetic appeal.
+
 **Real-Time Collaboration**: Enables multiple users to collaborate seamlessly in real-time, enhancing team productivity and creativity.
+
 **Offline Support**: Allows users to work offline without requiring an internet connection, ensuring uninterrupted workflows.
+
 **Export Options**: Supports exporting drawings in various formats, including SVG, PNG, and clipboard content, for easy sharing and integration.
+
 **Customizable Interface**: Offers a flexible and intuitive UI that can be tailored to individual preferences, improving user experience.
+
 **Embeddable Components**: Provides embed-friendly components, allowing users to integrate Excalidraw into websites or applications effortlessly.
+
 **Keyboard Shortcuts**: Includes a wide range of keyboard shortcuts to streamline the drawing process and boost efficiency.
+
 **Extensible Plugins**: Supports plugins to extend functionality and cater to specific user needs, fostering a rich ecosystem of tools.
+
 **Cross-Platform Compatibility**: Works seamlessly across different operating systems and devices, ensuring accessibility for all users.
+
 **Privacy-Focused Design**: Prioritizes user privacy by offering features like end-to-end encryption for collaborative sessions.
 
 Excalidraw is a versatile and intuitive tool that empowers users to bring their ideas to life through visual storytelling while fostering collaboration and creativity.

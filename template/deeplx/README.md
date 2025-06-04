@@ -5,11 +5,17 @@ DeepLX is an open-source, lightweight translation service that leverages the pow
 ### Key Features
 
 **Self-Hosted Solution**: Deploy the translation service on your own infrastructure, ensuring data privacy and full control over the environment.
+
 **Lightweight Architecture**: Built to be resource-efficient, DeepLX minimizes server load while maintaining high performance for translation tasks.
+
 **Easy Integration**: Provides a straightforward API interface for seamless integration into existing applications or workflows.
+
 **Customizable**: Tailor the service to meet specific requirements, including language support, response formats, and more.
+
 **Open Source**: Fully transparent and community-driven, allowing developers to contribute, modify, and extend the functionality as needed.
+
 **Cross-Platform Compatibility**: Compatible with various operating systems and environments, ensuring flexibility in deployment.
+
 **Developer-Friendly Documentation**: Comprehensive guides and examples make it easy to get started and troubleshoot issues effectively.
 
 DeepLX empowers developers to implement translation capabilities without relying on third-party services, offering both freedom and reliability in multilingual projects.

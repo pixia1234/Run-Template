@@ -5,13 +5,21 @@ Lobe Chat DB is an open-source database solution tailored for seamless integrati
 ### Key Features
 
 **Optimized for Chat Applications**: Specifically designed to manage message history, user interactions, and metadata common in chat systems.
+
 **Scalable Architecture**: Built to support both small-scale projects and enterprise-level applications with large datasets.
+
 **Flexible Data Models**: Supports various data formats and allows developers to define custom schemas for their unique use cases.
+
 **Efficient Querying**: Provides fast and intuitive querying capabilities to retrieve chat logs, user information, and other relevant data.
+
 **Developer-Friendly APIs**: Offers simple yet powerful APIs that integrate effortlessly into existing workflows and frameworks.
+
 **Extensible Design**: Allows customization and extension through plugins or additional modules to meet evolving project requirements.
+
 **Built-In Security Features**: Ensures data privacy and protection with features like encryption, access control, and secure authentication mechanisms.
+
 **Cross-Platform Compatibility**: Compatible with multiple operating systems and environments, enabling deployment across diverse infrastructures.
+
 **Active Community Support**: Backed by a vibrant community of developers contributing enhancements, bug fixes, and documentation updates.
 
 Lobe Chat DB empowers developers to focus on creating innovative chat experiences without worrying about the complexities of underlying data management. Its combination of performance, flexibility, and security makes it a valuable tool for any chat-based application.

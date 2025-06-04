@@ -5,14 +5,23 @@ PHP 8.1, released on November 25, 2021, builds upon the revolutionary changes in
 ### Key Features
 
 **Enumerations (Enums)**: First-class support for enumerations, allowing developers to define a type that consists of a fixed set of distinct values, improving code readability and type safety.
+
 **Readonly Properties**: The new `readonly` modifier prevents properties from being modified after initialization, enabling proper immutable value objects without excessive boilerplate code.
+
 **First-class Callable Syntax**: The new `Closure::fromCallable()` syntax provides a more concise way to create closures from callables, streamlining functional programming patterns.
+
 **New in Initializers**: Class properties can now use `new` expressions as default values, simplifying object initialization.
+
 **Pure Intersection Types**: Complement to union types, allowing developers to specify that a value must be compatible with multiple types simultaneously.
+
 **Never Return Type**: Indicates that a function or method never returns normally (it either throws an exception or terminates the script).
+
 **Final Class Constants**: Constants can now be marked as `final` in inheritance hierarchies, preventing them from being overridden in child classes.
+
 **Octal Number Notation**: A new, more explicit syntax for octal number literals with the `0o` prefix.
+
 **Fibers**: A low-level mechanism for implementing lightweight concurrency, enabling creation of cooperative multitasking primitives without extensions.
+
 **Array Unpacking with String Keys**: The spread operator now works with associative arrays, allowing for more flexible array manipulation.
 
 PHP 8.1 also includes performance optimizations, deprecations of legacy features, and numerous smaller improvements. These enhancements continue PHP's evolution as a modern language that combines ease of use with powerful features needed for contemporary web development, all while delivering the performance necessary for today's applications.

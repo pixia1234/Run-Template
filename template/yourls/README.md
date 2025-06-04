@@ -5,14 +5,23 @@ YOURLS is a lightweight, open-source URL shortening platform built with PHP and 
 ### Key Features
 
 **Self-Hosted Solution**: Deploy YOURLS on your own server to ensure complete control over your data and infrastructure.
+
 **Customizable Short URLs**: Create short links with custom keywords or let the system generate them automatically.
+
 **User-Friendly Admin Interface**: Manage all your short URLs through an intuitive web-based dashboard.
+
 **Public and Private Modes**: Operate YOURLS in either public mode for shared usage or private mode for restricted access.
+
 **Powerful API**: Integrate YOURLS seamlessly into other applications using its RESTful API for programmatic link creation.
+
 **Extensible via Plugins**: Extend functionality by leveraging a rich ecosystem of community-contributed plugins.
+
 **Highly Performant**: Optimized for speed and efficiency, YOURLS handles large volumes of links with minimal resource usage.
+
 **SEO-Friendly**: Generate short URLs that are optimized for search engines without compromising usability.
+
 **Comprehensive Logging**: Track click statistics and monitor traffic patterns for each shortened link.
+
 **Cross-Platform Compatibility**: Works on any server environment that supports PHP and MySQL, ensuring broad compatibility.
 
 YOURLS empowers developers and organizations to take ownership of their URL shortening needs while offering flexibility, scalability, and security.

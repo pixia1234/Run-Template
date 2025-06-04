@@ -5,14 +5,23 @@ GlitchTip is an open-source error tracking system designed to help developers mo
 ### Key Features:
 
 **Real-Time Error Tracking**: Capture and display errors in real-time, enabling quick identification and resolution of issues.
+
 **Open Source**: Fully transparent and customizable, allowing users to modify and extend the platform to meet their specific needs.
+
 **Self-Hosted Solution**: Deploy GlitchTip on your own infrastructure, ensuring data privacy and compliance with internal policies.
+
 **Comprehensive Event Data**: Collect detailed event information, including stack traces, request payloads, and environment details, for thorough debugging.
+
 **Team Collaboration Tools**: Assign issues, leave comments, and manage workflows within teams to streamline error resolution.
+
 **Integrations**: Seamlessly integrate with popular tools and platforms such as Slack, GitHub, and more, enhancing workflow automation.
+
 **Alerting and Notifications**: Configure custom alerts and notifications to stay informed about critical issues as they arise.
+
 **Scalable Architecture**: Built to handle projects of all sizes, from small applications to large-scale enterprise systems.
+
 **User-Friendly Interface**: An intuitive dashboard and easy navigation ensure a smooth user experience for both developers and project managers.
+
 **Data Privacy Compliance**: Designed to support GDPR and other data protection standards, providing peace of mind for organizations handling sensitive information.
 
 GlitchTip is an ideal choice for development teams seeking a robust, flexible, and privacy-focused solution for error tracking and application monitoring.

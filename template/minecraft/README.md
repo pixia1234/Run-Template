@@ -5,12 +5,19 @@ The **Minecraft Server Template** is a streamlined and customizable solution des
 ### Key Features
 
 **Pre-configured Setup**: Comes with ready-to-use configurations, reducing the complexity of initial server deployment.
+
 **Customizable Options**: Allows users to easily modify server settings to suit their specific needs, including game modes, difficulty levels, and world generation options.
+
 **Scalable Architecture**: Designed to handle various server sizes, from small private games to large public servers with multiple players.
+
 **Automated Management Tools**: Includes scripts and utilities for automating common tasks such as backups, updates, and performance monitoring.
+
 **Cross-Platform Compatibility**: Supports deployment across different operating systems, ensuring flexibility in hosting environments.
+
 **Mod and Plugin Support**: Simplifies the integration of mods and plugins, enabling enhanced gameplay experiences without extensive technical knowledge.
+
 **Comprehensive Documentation**: Provides clear and detailed instructions for setup, configuration, and troubleshooting, ensuring a smooth user experience.
+
 **Community-Friendly Design**: Encourages collaboration and contribution from the Minecraft community, fostering an ecosystem of shared resources and expertise.
 
 Whether you're setting up a personal server for friends or managing a large-scale multiplayer environment, this template offers the tools and flexibility needed to create a thriving Minecraft community.

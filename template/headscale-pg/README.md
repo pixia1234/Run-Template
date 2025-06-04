@@ -5,13 +5,21 @@ Headscale-pg is an open-source implementation of a WireGuard-based mesh network 
 ### Key Features
 
 **Self-Hosted Control Server**: Eliminate reliance on third-party services by hosting your own control server, ensuring full control over your network.
+
 **WireGuard Integration**: Leverage the modern, high-performance WireGuard protocol to establish secure and efficient encrypted tunnels between devices.
+
 **Decentralized Architecture**: Enable direct peer-to-peer communication without the need for intermediaries, reducing latency and enhancing privacy.
+
 **Multi-Platform Support**: Compatible with various operating systems and devices, making it adaptable to diverse environments.
+
 **Scalable Network Management**: Designed to handle growing networks with minimal overhead, supporting multiple users and devices seamlessly.
+
 **OAuth2 Authentication**: Securely authenticate clients using OAuth2, providing a familiar and reliable login mechanism.
+
 **Customizable Configuration**: Offers flexible configuration options to meet specific organizational or personal requirements.
+
 **Active Community Contributions**: Backed by a vibrant open-source community, ensuring continuous improvements and timely updates.
+
 **Comprehensive Logging and Monitoring**: Provides detailed logs and metrics to help administrators monitor network activity and troubleshoot issues effectively.
 
 Headscale-pg empowers developers and organizations to create secure, private networks while maintaining complete control over their infrastructure. Its combination of modern protocols, extensibility, and user-friendly features makes it a compelling choice for anyone seeking a self-hosted VPN solution.

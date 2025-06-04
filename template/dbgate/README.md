@@ -5,14 +5,23 @@ dbgate is an open-source, cross-platform database management tool designed to si
 ### Key Features
 
 **Cross-Platform Support**: Compatible with Windows, macOS, and Linux, ensuring flexibility across different operating systems.
+
 **Multi-Database Connectivity**: Supports a wide range of database engines, including MySQL, PostgreSQL, MongoDB, SQLite, and more.
+
 **Intuitive Query Editor**: Features a powerful SQL editor with syntax highlighting, auto-completion, and formatting capabilities to enhance query writing.
+
 **Data Import/Export**: Facilitates effortless data migration with support for importing and exporting data in multiple formats such as CSV, JSON, and Excel.
+
 **Schema Management**: Provides tools for visualizing, editing, and managing database schemas with ease.
+
 **Customizable Interface**: Offers a highly customizable workspace, allowing users to tailor the application to their specific needs.
+
 **Plugin Architecture**: Extensible via plugins, enabling users to add new features and integrations as required.
+
 **Secure Connections**: Ensures secure database connections with support for SSH tunneling and SSL encryption.
+
 **Version Control Integration**: Simplifies collaboration by integrating with version control systems for tracking changes in database scripts.
+
 **Lightweight and Fast**: Designed to be resource-efficient, providing a smooth and responsive user experience even with large datasets.
 
 dbgate empowers users to manage their databases with confidence, combining robust functionality with an accessible interface. Whether you're handling routine tasks or complex operations, dbgate is built to meet the demands of modern database management.

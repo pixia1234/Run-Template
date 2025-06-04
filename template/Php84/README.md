@@ -6,14 +6,23 @@ PHP 8.4 introduces several new features, performance improvements, and bug fixes
 ### Key Features
 
 **Advanced Type System Improvements**: Further refinements to PHP's type system, offering developers even more precision and safety when writing and maintaining complex applications.
+
 **Enhanced Performance Optimizations**: Continued improvements to the JIT compiler and overall runtime performance, making PHP applications faster and more resource-efficient.
+
 **Extended Attributes Functionality**: Expanded capabilities for PHP attributes, making this modern metadata system even more powerful for frameworks and libraries.
+
 **Improved Error Handling**: More consistent and informative error messages to help developers quickly identify and resolve issues.
+
 **Refined Object-Oriented Features**: New capabilities that make object-oriented programming in PHP more expressive and less verbose.
+
 **Standardized Randomization API**: Building upon the foundations in PHP 8.2, further improvements to randomization functions for both cryptographic and non-cryptographic purposes.
+
 **Expanded Native Functions**: New built-in functions that reduce the need for common boilerplate code patterns.
+
 **Memory Management Optimizations**: Behind-the-scenes improvements that make PHP more efficient with system resources.
+
 **Deprecation of Legacy Features**: Continued efforts to streamline the language by marking outdated patterns for future removal.
+
 **Command-line Interface Enhancements**: Improved developer tools and CLI capabilities for more efficient development workflows.
 
 PHP 8.4 continues the language's steady evolution toward becoming an increasingly robust platform for web development while maintaining the pragmatic approach and ease of use that have made PHP one of the most widely deployed server-side languages. While introducing new capabilities, it maintains strong backward compatibility with existing codebases, allowing for gradual adoption of new features.

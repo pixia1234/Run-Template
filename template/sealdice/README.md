@@ -5,6 +5,7 @@ Tabletop Role-Playing Game (TRPG) Utility Bot
 ## Description​​
 
 ​​SealDice​​ is a powerful, cross-platform random number generator bot tailored for Tabletop Role-Playing Games (TRPGs).
+
 Designed to streamline gameplay for both players and game masters, SealDice integrates seamlessly with ​​IM, delivering fast, fair, and flexible dice-rolling mechanics across all your favorite platforms.
 
 ## Universal Platform Compatibility​​

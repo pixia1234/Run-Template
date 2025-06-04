@@ -5,14 +5,23 @@ LibreChat is an open-source, self-hosted chat platform designed to provide a cus
 ### Key Features
 
 **Self-Hosted Deployment**: Full control over your data by hosting the platform on your own infrastructure.
+
 **Real-Time Communication**: Powered by WebSocket technology, enabling seamless and instant messaging experiences.
+
 **Customizable Interface**: Easily adapt the look and feel of the chat application to match your branding requirements.
+
 **Privacy-Oriented Design**: Prioritizes user privacy with end-to-end encryption options and no external dependencies.
+
 **Modular Architecture**: A flexible codebase that allows developers to extend functionality or integrate with other systems.
+
 **Multi-Platform Support**: Compatible with various devices and operating systems for a consistent user experience.
+
 **Authentication and Authorization**: Supports secure user authentication mechanisms to ensure only authorized access.
+
 **Extensible Plugin System**: Provides hooks and APIs for developers to add custom features or integrations.
+
 **Open-Source Community**: Actively maintained and supported by a community of contributors, ensuring continuous improvement.
+
 **Developer-Friendly Documentation**: Comprehensive guides and examples to facilitate quick setup and customization.
 
 LibreChat is an ideal choice for developers seeking a robust, adaptable, and secure chat solution tailored to their specific needs. Whether you're building a small team communication tool or scaling up for enterprise use, LibreChat offers the tools and flexibility to meet your requirements.
