@@ -5,14 +5,23 @@ FeatBit is an open-source feature management platform designed to help developme
 ### Key Features
 
 **Feature Flag Management**: Create, update, and manage feature flags across environments with an intuitive UI and robust API support.
+
 **Targeted Rollouts**: Gradually roll out features to specific user segments or percentages of your audience for controlled testing and deployment.
+
 **A/B Testing Capabilities**: Conduct experiments to evaluate the impact of new features on user engagement, conversion rates, and other key metrics.
+
 **Real-Time Updates**: Ensure instant synchronization of flag changes across all connected applications without requiring redeployment.
+
 **Customizable Rules Engine**: Define complex targeting rules using attributes like user roles, geolocation, or custom parameters to tailor feature availability.
+
 **Multi-Environment Support**: Manage feature flags across multiple environments (e.g., development, staging, production) with clear segregation and control.
+
 **Audit Logs and Analytics**: Gain insights into feature usage and track changes with detailed audit logs and performance metrics.
+
 **Developer-Friendly SDKs**: Integrate FeatBit into your applications using lightweight SDKs available for various programming languages and frameworks.
+
 **Scalable Architecture**: Designed for high performance and reliability, FeatBit supports large-scale deployments with minimal latency.
+
 **Open Source and Extensible**: Fully transparent and community-driven, FeatBit allows developers to contribute, extend, and customize its functionality to meet unique project requirements.
 
 With FeatBit, engineering teams can adopt modern feature management practices to accelerate delivery cycles, reduce risks, and enhance collaboration between developers and product stakeholders.

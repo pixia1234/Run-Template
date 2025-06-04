@@ -5,24 +5,43 @@ Postiz is a modern, open-source platform that lets creators, brands, and agencie
 ### Key Features
 
 **AI-Powered Content Generation**
+
    Leverage GPT-driven copywriting, hashtag suggestions, tone re-writes, and image-prompting tools to craft high-performing posts in seconds.
+
 **Unified Social Calendar**
+
    Manage Twitter/X, LinkedIn, Facebook, Instagram, and more from a single drag-and-drop calendar with color-coded queues and campaign grouping.
+
 **Smart Auto-Scheduling**
+
    Automatically posts at each account’s “best time,” based on historical engagement data and follower-activity heat maps.
+
 **Collaboration & Marketplace**
+
    Invite teammates, clients, or freelancers to comment, approve, or even exchange post ideas inside a built-in marketplace for buying/selling content.
+
 **Deep Analytics & A/B Testing**
+
    Track clicks, reach, CTR, and follower growth in real time. Run split tests on captions, creatives, or send times to incrementally improve ROI.
+
 **Lead Capture & Bio-Link Pages**
+
    Embed email capture forms, CTAs, or mini landing pages directly in your bio links and measure conversions without leaving Postiz.
+
 **Omnichannel Inbox**
+
    Respond to mentions, comments, and DMs from every connected network in one consolidated, filterable inbox.
+
 **Parity Between Cloud & Self-Hosted**
+
    No feature gating—self-hosted deployments have the exact same functionality as the managed SaaS offering.
+
 **Enterprise-Ready Security**
+
    Role-based access control, 2FA, audit logs, and AGPL-3.0 licensing ensure compliance and transparency.
+
 **Modern Tech Stack**
+
    NX monorepo, Next.js (React), NestJS, Prisma (PostgreSQL by default), Redis + BullMQ, and Resend for transactional email.
 
 ### Notice

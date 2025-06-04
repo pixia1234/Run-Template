@@ -5,12 +5,19 @@ Answer is a modern, open-source Q&A platform engineered for knowledge sharing an
 ### Key Features
 
 **Modern UI/UX**: Delivers a clean, responsive, and accessible interface that keeps users focused on asking, answering, and discovering knowledge.
+
 **Flexible Tagging & Categorization**: Supports hierarchical categories and powerful tagging, enabling precise content organization and effortless navigation.
+
 **Markdown & Rich-Text Editor**: Provides a versatile editor with live preview, syntax highlighting, and media embedding for clear, well-formatted posts.
+
 **Reputation & Badges System**: Encourages high-quality contributions through up-voting, reputation points, and customizable badge rewards.
+
 **Extensible Plugin Architecture**: Easily adds functionality—such as SSO, analytics, or custom widgets—via a robust extension API and vibrant plugin ecosystem.
+
 **Comprehensive Search & SEO**: Features full-text search, semantic suggestions, and SEO-friendly URLs to maximize discoverability both on-site and through search engines.
+
 **Internationalization (i18n)**: Offers multi-language support out of the box, allowing communities to localize the interface and content effortlessly.
+
 **Secure & Scalable Deployment**: Ships with Docker and Kubernetes manifests, automatic backups, and enterprise-grade security defaults to ensure reliable operation in any environment.
 
 ### Notice

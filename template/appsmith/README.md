@@ -5,13 +5,21 @@ Appsmith is an open-source framework designed to help developers build internal 
 ### Key Features
 
 **Drag-and-Drop Interface**: Build user interfaces effortlessly using pre-built widgets like tables, forms, charts, and more.
+
 **Integration Capabilities**: Connect to multiple data sources, including REST APIs, GraphQL, and popular databases like PostgreSQL, MongoDB, and MySQL.
+
 **Customizable Widgets**: Tailor widgets to match specific use cases by modifying their properties, styles, and behaviors.
+
 **Role-Based Access Control**: Secure your applications with fine-grained access control, ensuring only authorized users can view or modify data.
+
 **Version Control & Collaboration**: Track changes, revert to previous versions, and collaborate seamlessly with team members.
+
 **Self-Hosted Deployment**: Deploy Appsmith on your own infrastructure, ensuring full control over data privacy and compliance.
+
 **JavaScript Support**: Write custom logic using JavaScript, allowing for advanced functionality and dynamic interactions.
+
 **Cross-Platform Compatibility**: Develop applications that work seamlessly across web browsers and devices.
+
 **Active Community & Documentation**: Benefit from extensive documentation, tutorials, and a vibrant community to support your development journey.
 
 Appsmith is an ideal choice for developers looking to accelerate the creation of internal tools without compromising on flexibility or control. Whether you're building admin panels, CRUD apps, or dashboards, Appsmith provides the tools you need to succeed.

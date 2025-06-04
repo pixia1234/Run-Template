@@ -5,11 +5,17 @@ Perplexica is an innovative and extensible framework designed to facilitate the 
 ### Key Features
 
 **Modular Architecture**: Perplexica employs a modular design, enabling developers to easily extend and customize core functionalities without disrupting the existing structure.  
+
 **Rich Narrative Tools**: Offers intuitive utilities for managing complex dialogue trees, branching storylines, and dynamic character interactions.  
+
 **Event-Driven System**: Implements a flexible event-driven model that allows seamless integration of custom triggers and callbacks for enhanced gameplay mechanics.  
+
 **State Management**: Provides built-in mechanisms for saving and restoring game states, ensuring players can resume their progress effortlessly.  
+
 **Cross-Platform Compatibility**: Designed to run seamlessly across multiple platforms, making it accessible for a wide range of users and environments.  
+
 **Comprehensive Documentation**: Includes detailed guides and examples to help developers quickly get up to speed with the framework's capabilities.  
+
 **Lightweight and Performant**: Optimized for efficiency, ensuring smooth performance even in resource-constrained scenarios.  
 
 With its focus on simplicity, scalability, and creativity, Perplexica stands out as a versatile tool for anyone passionate about crafting engaging text-based adventures. Dive into the framework today and unlock the potential of your storytelling vision.

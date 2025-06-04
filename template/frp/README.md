@@ -5,14 +5,23 @@ frp is a high-performance reverse proxy application designed to facilitate secur
 ### Key Features
 
 **Secure Communication**: Encrypts all traffic between clients and servers using TLS, ensuring data integrity and privacy.
+
 **Multiple Protocol Support**: Supports common protocols including TCP, UDP, HTTP, and HTTPS, making it adaptable to a wide range of use cases.
+
 **Customizable Configuration**: Provides flexible configuration options through an easy-to-read configuration file, allowing users to tailor the application to their specific needs.
+
 **Load Balancing**: Distributes incoming traffic across multiple backend services, improving reliability and performance under heavy workloads.
+
 **Authentication and Authorization**: Implements token-based authentication to ensure only authorized clients can connect to the server.
+
 **Web-Based Dashboard**: Offers a built-in dashboard for monitoring connection statuses, traffic statistics, and other operational metrics.
+
 **Cross-Platform Compatibility**: Runs on various operating systems, including Linux, macOS, and Windows, ensuring broad accessibility.
+
 **NAT Traversal**: Simplifies the process of accessing services behind NATs or firewalls without requiring complex port forwarding rules.
+
 **Plugin System**: Supports extensibility through plugins, enabling additional functionality such as custom routing logic or integration with third-party tools.
+
 **High Performance**: Optimized for low resource consumption and high throughput, ensuring smooth operation even in demanding scenarios.
 
 With its robust feature set and ease of use, frp is a powerful tool for anyone needing to securely expose internal services to the outside world. Whether you're managing a small development setup or scaling enterprise-grade infrastructure, frp provides the tools necessary to achieve your goals efficiently.

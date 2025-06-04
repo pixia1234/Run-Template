@@ -5,12 +5,19 @@ Flowise is an open-source, lightweight framework designed to streamline the crea
 ### Key Features
 
 **Modular Architecture**: Construct workflows by assembling reusable components, allowing for greater flexibility and customization.
+
 **Lightweight Design**: Minimal overhead ensures quick setup and execution, making it suitable for both small-scale projects and large-scale deployments.
+
 **Extensibility**: Easily integrate custom modules or extend existing ones to tailor the framework to your specific needs.
+
 **Cross-Platform Compatibility**: Designed to work seamlessly across different operating systems and environments.
+
 **Efficient Pipeline Management**: Simplifies the process of building, testing, and deploying machine learning pipelines with intuitive tools.
+
 **Scalability**: Handle projects of varying complexity, from simple tasks to intricate workflows, without compromising performance.
+
 **Developer-Friendly APIs**: Offers clean and consistent APIs that enhance productivity and reduce the learning curve for new users.
+
 **Active Community Support**: Backed by a vibrant community of contributors, ensuring continuous improvement and timely support.
 
 Flowise is an ideal choice for teams looking to standardize their machine learning workflows while retaining the freedom to innovate. Its combination of simplicity, power, and adaptability makes it a standout solution in the realm of workflow automation.

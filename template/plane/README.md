@@ -5,14 +5,23 @@ Plane is an open-source project management tool designed to help teams organize,
 ### Key Features
 
 **Intuitive Task Management**: Create, assign, and prioritize tasks effortlessly using a user-friendly interface.
+
 **Customizable Workspaces**: Tailor workspaces to match your team's unique needs and workflows.
+
 **Real-Time Collaboration**: Collaborate seamlessly with team members through real-time updates and notifications.
+
 **Kanban Boards**: Visualize workflows and track progress using highly customizable Kanban boards.
+
 **Advanced Filtering and Search**: Quickly find tasks, issues, or projects using powerful filtering and search capabilities.
+
 **Cross-Platform Compatibility**: Access Plane from any device, ensuring productivity on the go.
+
 **Open Source Flexibility**: Fully customizable and extensible codebase, allowing developers to adapt Plane to their specific requirements.
+
 **Developer-Friendly APIs**: Integrate Plane with other tools and services using well-documented APIs.
+
 **Activity Tracking and Reporting**: Monitor project performance and generate detailed reports to assess progress over time.
+
 **Privacy and Security**: Host your data securely on your own infrastructure, ensuring complete control over sensitive information.
 
 Plane empowers teams to focus on what matters most—delivering results—by removing unnecessary complexity from project management. Try it today and experience how simplicity meets power in managing your projects!

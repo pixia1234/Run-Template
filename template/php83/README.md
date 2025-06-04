@@ -5,14 +5,23 @@ PHP 8.0 represents a significant milestone in the evolution of PHP, released on 
 ### Key Features
 
 **JIT Compiler**: The Just-In-Time compilation capability provides significant performance improvements for compute-intensive applications by translating PHP opcodes into machine code at runtime.
+
 **Union Types**: Enables developers to specify multiple possible types for parameters, return values, and properties, enhancing type safety without sacrificing flexibility.
+
 **Named Arguments**: Allows passing arguments to functions based on parameter names, making code more readable and eliminating the need for numerous optional parameters.
+
 **Attributes**: Offers a native syntax for adding metadata to classes, properties, functions, and methods, replacing the traditional docblock annotations.
+
 **Constructor Property Promotion**: Simplifies class definitions by combining property declarations with constructor parameters, reducing boilerplate code.
+
 **Match Expression**: An improved switch statement that returns values and uses strict comparison, helping to avoid common pitfalls of the traditional switch syntax.
+
 **Nullsafe Operator**: Provides a concise way to chain method calls while handling null values gracefully with the `?->` operator.
+
 **Weak Maps**: Allows object keys in a map without preventing garbage collection of those objects when they're no longer referenced elsewhere.
+
 **Consistent Type Errors**: Error handling is more consistent, with most type-related errors now being TypeError exceptions.
+
 **Type System Improvements**: Enhanced type checking, including mixed type, static return type, and stricter type checks for arithmetic/bitwise operators.
 
 PHP 8.0 also introduces improved error messages, enhanced string-to-number comparison, and various optimization improvements that make the language more efficient and developer-friendly. This release represents PHP's continued evolution toward becoming a more powerful, secure, and performant programming language while maintaining its developer accessibility and wide ecosystem support.

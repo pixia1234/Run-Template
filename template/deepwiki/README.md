@@ -5,14 +5,23 @@ DeepWiki is an innovative, open-source documentation platform designed to stream
 ### Key Features
 
 **Markdown-First Approach**: Write and format content using Markdown, ensuring simplicity and compatibility with modern workflows.
+
 **Collaboration-Friendly**: Supports team collaboration with role-based access control, making it ideal for group projects.
+
 **Customizable Themes**: Choose from a variety of themes or create your own to match your branding or personal preferences.
+
 **Real-Time Preview**: Edit content with confidence using the real-time preview feature, which ensures your formatting is accurate.
+
 **Search Functionality**: Quickly locate specific sections or documents with a robust, built-in search engine.
+
 **Version Control Integration**: Seamlessly integrate with Git-based repositories to track changes and manage document versions.
+
 **Multi-Language Support**: Create documentation in multiple languages to reach a global audience effectively.
+
 **Extensible Plugins**: Enhance functionality by leveraging a rich ecosystem of plugins tailored to various use cases.
+
 **Offline Access**: Access your documentation offline, ensuring productivity even without an internet connection.
+
 **Responsive Design**: Ensure your content looks great on any device, from desktops to tablets and smartphones.
 
 DeepWiki empowers developers and technical writers to focus on what matters most—creating high-quality documentation—while minimizing the overhead of managing complex tools.

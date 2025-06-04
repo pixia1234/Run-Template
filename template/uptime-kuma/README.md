@@ -5,14 +5,23 @@ Uptime Kuma is a self-hosted, lightweight, and user-friendly monitoring tool des
 ### Key Features
 
 **Real-Time Monitoring**: Provides instant updates on the status of your monitored services without requiring manual refreshes.
+
 **Multi-Protocol Support**: Monitors various types of services using protocols such as HTTP(s), TCP, Ping, DNS, and more.
+
 **Customizable Notifications**: Supports a wide range of notification channels including email, SMS, Slack, Telegram, Discord, and many others.
+
 **Intuitive Web Interface**: Offers a clean, responsive, and feature-rich dashboard that simplifies the process of managing monitored endpoints.
+
 **Self-Hosted Deployment**: Ensures full control over your data by allowing you to host the application on your own infrastructure.
+
 **Multi-Language Support**: Includes localization options to cater to users from diverse linguistic backgrounds.
+
 **Docker-Friendly Setup**: Simplifies deployment through Docker, enabling quick installation and configuration.
+
 **Status Page Generation**: Automatically creates public or private status pages to share the health of your services with stakeholders.
+
 **Active Development and Community Support**: Regularly updated with new features and improvements, backed by an active and supportive open-source community.
+
 **Lightweight and Efficient**: Designed to run efficiently on minimal hardware resources without compromising performance.
 
 Uptime Kuma strikes an excellent balance between functionality and ease of use, making it a valuable asset for anyone seeking a reliable monitoring solution. Whether you're managing personal projects or overseeing enterprise-level infrastructures, Uptime Kuma equips you with the tools needed to ensure uptime and performance consistency.

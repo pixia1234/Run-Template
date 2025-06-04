@@ -5,14 +5,23 @@ Overleaf is a powerful, open-source platform designed for collaborative writing 
 ### Key Features
 
 **Real-Time Collaboration**: Multiple users can edit the same document simultaneously, with changes reflected instantly for all collaborators.
+
 **Integrated LaTeX Editor**: A fully-featured LaTeX editor with syntax highlighting, autocompletion, and error detection to enhance productivity.
+
 **Rich Template Library**: Access to a vast collection of templates for journals, presentations, theses, and more, ensuring consistency and compliance with publication standards.
+
 **Version Control**: Built-in version history allows users to track changes, revert to previous versions, and manage document updates efficiently.
+
 **Cloud-Based Storage**: Documents are stored securely in the cloud, enabling access from any device with an internet connection and eliminating the risk of data loss.
+
 **Compilation and Preview**: Real-time compilation of LaTeX documents with instant PDF preview, ensuring accurate formatting and layout.
+
 **Integration with External Tools**: Supports integration with reference managers like Zotero and Mendeley, as well as Git for advanced version control workflows.
+
 **Customizable Environment**: Users can personalize their workspace with custom compiler settings, project configurations, and editor preferences.
+
 **Offline Mode**: Provides the ability to work offline and sync changes once reconnected to the internet, ensuring uninterrupted productivity.
+
 **Security and Privacy**: Offers secure collaboration features, including privacy controls and encrypted communications, to protect sensitive content.
 
 Overleaf is an essential tool for anyone working with LaTeX, combining ease of use with advanced functionality to support seamless document creation and collaboration.

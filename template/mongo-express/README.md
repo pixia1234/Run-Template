@@ -5,16 +5,27 @@ Mongo-express is a lightweight, web-based MongoDB administrative interface writt
 ### Key Features
 
 **Web-Based Interface**: Access MongoDB databases through an easy-to-navigate, responsive web application.
+
 **Cross-Platform Compatibility**: Works seamlessly on any modern browser and operating system.
+
 **CRUD Operations**: Perform Create, Read, Update, and Delete operations on collections and documents with minimal effort.
+
 **Schema Visualization**: Explore and analyze the structure of your collections and documents visually.
+
 **Query Support**: Execute custom queries and aggregations directly within the interface.
+
 **GridFS Support**: Manage large files stored in MongoDB using GridFS functionality.
+
 **Authentication and Security**: Secure access to your MongoDB instance with authentication support and role-based access control.
+
 **JSON Document Editor**: Edit JSON documents with syntax highlighting and validation to ensure data integrity.
+
 **Tree View Navigation**: Navigate databases and collections effortlessly using a hierarchical tree view.
+
 **Customizable Theme**: Choose between light and dark themes for a personalized user experience.
+
 **Lightweight and Fast**: Built with performance in mind, mongo-express minimizes overhead while providing robust functionality.
+
 **Extensible**: Easily extendable and customizable to fit specific project requirements.
 
 Mongo-express is an excellent companion tool for developers working with MongoDB, offering a streamlined and efficient way to manage and interact with databases during development and testing phases.

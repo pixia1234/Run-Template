@@ -5,12 +5,19 @@ Refly is an innovative, open-source project designed to streamline the developme
 ### Key Features
 
 **AI-Driven Code Generation**: Automatically generates clean, efficient, and context-aware code snippets tailored to your project's needs.
+
 **Multi-Language Support**: Compatible with a wide range of programming languages, ensuring flexibility across different tech stacks.
+
 **Smart Context Understanding**: Analyzes existing codebases to provide relevant suggestions that align with your project's architecture.
+
 **Customizable Templates**: Allows users to define custom templates for frequently used code patterns, enhancing workflow efficiency.
+
 **Error Detection and Suggestions**: Identifies potential issues in your code and offers actionable recommendations to resolve them.
+
 **Seamless Integration**: Easily integrates with popular IDEs and development environments, minimizing disruptions to your workflow.
+
 **Developer-Centric Design**: Prioritizes usability and adaptability, ensuring the tool complements rather than complicates your coding process.
+
 **Open-Source Community**: Encourages collaboration and contributions from the developer community to continuously improve and expand functionality.
 
 Refly empowers developers to focus on creativity and problem-solving by reducing the time spent on routine coding tasks. Its intuitive design and powerful features make it an indispensable asset for modern software development.

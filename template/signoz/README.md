@@ -5,13 +5,21 @@ SigNoz is an open-source observability platform designed to help developers moni
 ### Key Features
 
 **Unified Observability**: Combines metrics, traces, and logs in a single pane of glass, simplifying the monitoring and debugging process.
+
 **OpenTelemetry Native**: Fully supports OpenTelemetry, allowing effortless instrumentation and collection of telemetry data without vendor lock-in.
+
 **High-Performance Querying**: Powered by a scalable backend, SigNoz offers fast querying capabilities for large-scale distributed systems.
+
 **Customizable Dashboards**: Provides intuitive and flexible dashboards to visualize application performance and operational health.
+
 **Anomaly Detection**: Includes advanced features for identifying performance bottlenecks and anomalies in real-time.
+
 **Cost-Effective Solution**: Eliminates the need for multiple proprietary tools, reducing infrastructure and operational costs.
+
 **Developer-Friendly**: Designed with a focus on simplicity and usability, making it accessible for both beginners and experienced engineers.
+
 **Extensible Architecture**: Supports integrations with various data sources and third-party tools, ensuring adaptability to diverse tech stacks.
+
 **Self-Hosted Option**: Offers the flexibility to deploy on-premise or in the cloud, ensuring data privacy and compliance with organizational policies.
 
 SigNoz is ideal for teams seeking a robust, open-source observability solution that scales with their needs while maintaining ease of use and cost efficiency.

@@ -5,14 +5,23 @@ PHP 8.2, released on December 8, 2022, continues to refine the language with new
 ### Key Features
 
 **Readonly Classes**: Simplifies creating immutable objects by allowing entire classes to be marked as readonly, automatically making all properties readonly without having to declare each one individually.
+
 **Disjunctive Normal Form (DNF) Types**: Combines union and intersection types with a more flexible syntax, allowing developers to express complex type combinations such as `(A&B)|C`.
+
 **Null, False, and True as Standalone Types**: These can now be used as explicit return and parameter types, improving type specificity and code clarity.
+
 **New Random Extension**: A revamped random number generation API with better security, performance, and usability than the previous mt_rand and random_int functions.
+
 **Deprecated Dynamic Properties**: Class properties that are accessed but not declared are now deprecated, encouraging better code organization and preventing typo-related bugs.
+
 **Constants in Traits**: Adds support for defining constants within traits, enabling more complete encapsulation of related functionality.
+
 **Improved Redaction in var_dump()**: Sensitive information in stack traces is now automatically redacted, enhancing security when debugging.
+
 **Allow null and false as Standalone Types**: Improved type declarations allow more precise type specifications, particularly useful for optional values.
+
 **Resource to Object Migration**: Continuation of PHP's long-term plan to replace resource types with proper objects for better OOP compatibility.
+
 **Performance Improvements**: Optimizations to the JIT compiler and internal functions for better overall performance.
 
 PHP 8.2 represents another step in PHP's evolution as a mature, type-safe language that balances ease of use with powerful features for professional development. While not as revolutionary as PHP 8.0, it provides important refinements that help developers write more reliable and maintainable code, making it a worthwhile upgrade for PHP projects that can benefit from its new capabilities.

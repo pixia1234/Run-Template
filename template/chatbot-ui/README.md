@@ -5,27 +5,35 @@ Chatbot UI is an open-source project designed to provide developers with a custo
 ### Key Features
 
 **Modern and Responsive Design**  
+
   The interface is sleek, intuitive, and optimized for both desktop and mobile devices, ensuring a consistent user experience across platforms.
 
 **Customizable Components**  
+
   Developers can easily modify the appearance and behavior of the chatbot UI to align with their branding or specific project requirements.
 
 **Backend Agnostic Architecture**  
+
   Designed to work seamlessly with any backend service or API, allowing developers to integrate their preferred natural language processing (NLP) engines or chatbot frameworks.
 
 **Real-Time Interaction**  
+
   Supports real-time communication between users and chatbots, providing instant responses and enhancing the overall conversational experience.
 
 **Extensible Plugin System**  
+
   Includes support for plugins and extensions, empowering developers to add advanced functionalities such as analytics, sentiment analysis, or multi-language support.
 
 **Developer-Friendly Codebase**  
+
   Built with clean, modular, and well-documented code, making it easy for developers to understand, contribute, and extend the project.
 
 **Cross-Platform Compatibility**  
+
   Ensures compatibility with major operating systems and browsers, eliminating platform-specific limitations.
 
 **Open Source Community**  
+
   Backed by an active community of contributors, offering continuous updates, bug fixes, and feature enhancements to keep the project robust and up-to-date.
 
 Chatbot UI is an ideal choice for developers looking to create engaging, interactive, and scalable chatbot solutions without compromising on design or functionality. Whether you are building a simple FAQ bot or a complex conversational AI system, this project provides the tools and flexibility needed to succeed.

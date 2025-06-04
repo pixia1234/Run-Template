@@ -5,14 +5,23 @@ Plausible Analytics is a lightweight, open-source web analytics tool designed to
 ### Key Features
 
 **Privacy-Focused**: Built to respect user privacy by avoiding cookies, tracking scripts, or personal data collection.
+
 **Lightweight Script**: The analytics script is incredibly small (~1KB gzipped), ensuring fast page load times without compromising performance.
+
 **Simple Dashboard**: Offers an intuitive and clean interface that highlights key metrics such as page views, referrers, and device usage.
+
 **Open Source**: Fully transparent codebase allows developers to inspect, modify, and contribute to the project for continuous improvement.
+
 **Self-Hosted Option**: Provides flexibility for users who prefer hosting their analytics infrastructure for enhanced control and security.
+
 **Real-Time Data**: Displays real-time visitor activity, enabling immediate feedback on website traffic trends.
+
 **Customizable Reports**: Supports filtering and segmentation options to tailor reports based on specific needs.
+
 **GDPR Compliant**: Designed to meet modern privacy standards out of the box, eliminating the need for cookie banners or consent forms.
+
 **Event Tracking**: Allows tracking of custom events and goals to measure user interactions beyond basic page views.
+
 **Exportable Data**: Enables exporting analytics data for further analysis or integration with other tools.
 
 Plausible Analytics empowers developers and website owners to make informed decisions while adhering to ethical practices in web analytics. Its combination of simplicity, transparency, and functionality makes it an ideal choice for those seeking a modern, privacy-conscious solution.

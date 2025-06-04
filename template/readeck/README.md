@@ -5,12 +5,19 @@
 Below are the key features that make **readeck** stand out:
 
 **Simplified Markdown-Based Syntax**: Write content using an easy-to-learn Markdown-inspired format, reducing the learning curve for new users.
+
 **Highly Customizable Templates**: Leverage built-in templates or create your own to tailor the output to your specific needs.
+
 **Multi-Format Export**: Generate outputs in various formats, including Markdown, HTML, and PDF, ensuring compatibility across platforms.
+
 **Automated Formatting**: Automatically handle repetitive tasks like table alignment, section numbering, and indentation for cleaner, error-free results.
+
 **Developer-Focused Workflow**: Seamlessly integrates into existing development workflows, including CI/CD pipelines, for automated documentation generation.
+
 **Extensible Plugin System**: Extend functionality through plugins to support additional formats, themes, or custom processing logic.
+
 **Cross-Platform Compatibility**: Run on any operating system with minimal dependencies, ensuring accessibility for all users.
+
 **Comprehensive Documentation**: Includes detailed guides and examples to help users get started quickly and troubleshoot effectively.
 
 Whether you're maintaining open-source projects, collaborating on enterprise-level applications, or simply documenting personal projects, **readeck** is engineered to meet your documentation needs efficiently and elegantly.

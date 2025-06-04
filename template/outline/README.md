@@ -5,14 +5,23 @@ Outline is an open-source, real-time collaborative documentation platform design
 ### Key Features
 
 **Real-Time Collaboration**: Multiple users can edit documents simultaneously, ensuring smooth teamwork and reducing version control issues.
+
 **Markdown Support**: Write and format content using Markdown, offering a clean and distraction-free writing experience.
+
 **Rich Embedding Options**: Embed images, videos, code snippets, and other media directly into your documents for enhanced content representation.
+
 **Powerful Search**: Quickly find documents and content with Outline's robust full-text search functionality, complete with filters and tagging support.
+
 **Access Control**: Fine-grained permissions allow administrators to manage who can view or edit specific documents, ensuring data security and privacy.
+
 **Integrations**: Seamlessly connect with third-party tools like Slack, Google Drive, and GitHub to enhance productivity and streamline workflows.
+
 **Cross-Platform Accessibility**: Access your documentation from any device with a web browser, ensuring flexibility and convenience for remote teams.
+
 **Customizable Themes**: Personalize the look and feel of your workspace with customizable themes and branding options.
+
 **Offline Mode**: Continue working on your documents even without an internet connection, with changes syncing automatically once you're back online.
+
 **Extensible Architecture**: Developers can extend Outline’s functionality by building plugins or custom integrations tailored to their team’s needs.
 
 Outline is more than just a documentation tool; it’s a comprehensive platform designed to empower teams to collaborate effectively and centralize their knowledge base. Whether you're managing technical documentation, meeting notes, or project plans, Outline provides the tools you need to stay organized and productive.

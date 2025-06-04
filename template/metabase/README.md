@@ -5,36 +5,47 @@ Metabase is an open-source business intelligence (BI) tool designed to make data
 ### Key Features
 
 **User-Friendly Interface**:  
+
   Metabase provides an intuitive graphical interface that allows users to query databases without needing to write complex SQL queries.
 
 **Powerful Query Builder**:  
+
   The drag-and-drop query builder empowers users to create custom queries and filters with ease, even for those unfamiliar with database languages.
 
 **SQL Mode for Advanced Users**:  
+
   For users comfortable with SQL, Metabase offers a dedicated SQL editor to execute advanced queries while still integrating seamlessly with its visualization tools.
 
 **Rich Data Visualization**:  
+
   Generate insightful charts, graphs, and dashboards to present data in a visually appealing and comprehensible format.
 
 **Cross-Database Support**:  
+
   Connect to multiple databases such as PostgreSQL, MySQL, MongoDB, and more, enabling centralized access to diverse data sources.
 
 **Real-Time Collaboration**:  
+
   Share dashboards and reports with team members, ensuring everyone stays aligned with the latest insights.
 
 **Automation and Scheduling**:  
+
   Automate recurring tasks like report generation and email notifications to streamline workflows and reduce manual effort.
 
 **Customizable Permissions**:  
+
   Define granular access controls to ensure data security and compliance with organizational policies.
 
 **Embeddable Dashboards**:  
+
   Integrate Metabase dashboards into your applications or websites for seamless data storytelling.
 
 **Extensible via Plugins**:  
+
   Expand functionality by leveraging plugins or building custom integrations tailored to specific business needs.
 
 **Active Community and Regular Updates**:  
+
   Backed by a vibrant open-source community, Metabase receives frequent updates and contributions, ensuring it remains cutting-edge and reliable.
 
 Metabase strikes a balance between simplicity and sophistication, making it an ideal choice for teams seeking to unlock the full potential of their data without steep learning curves or hefty licensing fees.

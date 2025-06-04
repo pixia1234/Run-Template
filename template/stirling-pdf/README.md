@@ -5,14 +5,23 @@ Stirling-PDF is an open-source, user-friendly tool designed to simplify the hand
 ### Key Features
 
 **Batch Processing**: Handle multiple PDF files simultaneously, saving time and effort for repetitive tasks.
+
 **Document Merging and Splitting**: Combine multiple PDFs into one or split a single document into smaller parts with ease.
+
 **Page Manipulation**: Rearrange, rotate, delete, or extract specific pages from PDF documents as needed.
+
 **Conversion Support**: Convert PDFs to other formats (e.g., images) and vice versa, ensuring compatibility across platforms.
+
 **Encryption and Decryption**: Secure sensitive documents with password protection or remove encryption for authorized access.
+
 **Metadata Management**: View, edit, or remove metadata such as author, title, and keywords for better document organization.
+
 **Watermarking**: Add custom watermarks to PDFs for branding or confidentiality purposes.
+
 **Optimization Tools**: Compress large PDFs to reduce file size without compromising quality.
+
 **Cross-Platform Compatibility**: Run seamlessly on various operating systems, including Windows, macOS, and Linux.
+
 **Extensible Architecture**: Designed with developers in mind, allowing for customization and integration into existing workflows.
 
 Stirling-PDF stands out as a reliable solution for both casual users and professionals seeking efficient PDF management capabilities. Its modular design and robust feature set make it a valuable addition to any toolkit.
