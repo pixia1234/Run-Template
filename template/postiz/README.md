@@ -4,42 +4,42 @@ Postiz is a modern, open-source platform that lets creators, brands, and agencie
 
 ### Key Features
 
-- **AI-Powered Content Generation**
+**AI-Powered Content Generation**
    Leverage GPT-driven copywriting, hashtag suggestions, tone re-writes, and image-prompting tools to craft high-performing posts in seconds.
-- **Unified Social Calendar**
+**Unified Social Calendar**
    Manage Twitter/X, LinkedIn, Facebook, Instagram, and more from a single drag-and-drop calendar with color-coded queues and campaign grouping.
-- **Smart Auto-Scheduling**
+**Smart Auto-Scheduling**
    Automatically posts at each account’s “best time,” based on historical engagement data and follower-activity heat maps.
-- **Collaboration & Marketplace**
+**Collaboration & Marketplace**
    Invite teammates, clients, or freelancers to comment, approve, or even exchange post ideas inside a built-in marketplace for buying/selling content.
-- **Deep Analytics & A/B Testing**
+**Deep Analytics & A/B Testing**
    Track clicks, reach, CTR, and follower growth in real time. Run split tests on captions, creatives, or send times to incrementally improve ROI.
-- **Lead Capture & Bio-Link Pages**
+**Lead Capture & Bio-Link Pages**
    Embed email capture forms, CTAs, or mini landing pages directly in your bio links and measure conversions without leaving Postiz.
-- **Omnichannel Inbox**
+**Omnichannel Inbox**
    Respond to mentions, comments, and DMs from every connected network in one consolidated, filterable inbox.
-- **Parity Between Cloud & Self-Hosted**
+**Parity Between Cloud & Self-Hosted**
    No feature gating—self-hosted deployments have the exact same functionality as the managed SaaS offering.
-- **Enterprise-Ready Security**
+**Enterprise-Ready Security**
    Role-based access control, 2FA, audit logs, and AGPL-3.0 licensing ensure compliance and transparency.
-- **Modern Tech Stack**
+**Modern Tech Stack**
    NX monorepo, Next.js (React), NestJS, Prisma (PostgreSQL by default), Redis + BullMQ, and Resend for transactional email.
 
 ### Notice
 
-1.  Protect the login address: Set access restrictions to prevent unauthorized direct access.
+Protect the login address: Set access restrictions to prevent unauthorized direct access.
     
-2.  Use a complex password: Create a password that includes uppercase letters, lowercase letters, numbers, and special characters to increase cracking difficulty.
+Use a complex password: Create a password that includes uppercase letters, lowercase letters, numbers, and special characters to increase cracking difficulty.
     
-3.  Avoid common usernames: Refrain from using common usernames like "admin" or "root" to reduce the risk of brute-force attacks.
+Avoid common usernames: Refrain from using common usernames like "admin" or "root" to reduce the risk of brute-force attacks.
     
-4.  Regularly change passwords: It is recommended to update your password periodically to mitigate security risks associated with long-term usage of the same password.
+Regularly change passwords: It is recommended to update your password periodically to mitigate security risks associated with long-term usage of the same password.
     
-5.  Enable multi-factor authentication: Adopt two-factor authentication to add an extra layer of security beyond just the password.
+Enable multi-factor authentication: Adopt two-factor authentication to add an extra layer of security beyond just the password.
     
-6.  Limit login attempts: Set a maximum number of failed login attempts, and temporarily lock the account once it is exceeded to prevent brute-force attacks.
+Limit login attempts: Set a maximum number of failed login attempts, and temporarily lock the account once it is exceeded to prevent brute-force attacks.
     
-7.  Configure unusual login notifications: Set up alerts for abnormal login activity to be informed and respond promptly to potential security issues.
+Configure unusual login notifications: Set up alerts for abnormal login activity to be informed and respond promptly to potential security issues.
     
-8.  Conduct regular security audits: Periodically review account security logs and system configurations to quickly identify and fix potential vulnerabilities.
+Conduct regular security audits: Periodically review account security logs and system configurations to quickly identify and fix potential vulnerabilities.
         
