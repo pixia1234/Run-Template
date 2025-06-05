@@ -53,7 +53,7 @@ kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}-api
   annotations:
-    originImageName: langgenius/dify-api:1.1.3
+    originImageName: langgenius/dify-api:1.4.1
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -112,7 +112,7 @@ spec:
               echo "Dify database is ready"
       containers:
         - name: ${{ defaults.app_name }}-api
-          image: langgenius/dify-api:1.1.3
+          image: langgenius/dify-api:1.4.1
           env:
             - name: MODE
               value: api
@@ -255,7 +255,7 @@ spec:
               ephemeral-storage: 200Mi
             limits:
               cpu: 500m
-              memory: 500Mi
+              memory: 512Mi
               ephemeral-storage: 200Mi
           ports:
             - containerPort: 5001
@@ -264,7 +264,7 @@ spec:
             - name: vn-appvn-apivn-storage
               mountPath: /app/api/storage
         - name: ${{ defaults.app_name }}-worker
-          image: langgenius/dify-api:1.1.3
+          image: langgenius/dify-api:1.4.1
           env:
             - name: MODE
               value: worker
@@ -375,7 +375,7 @@ spec:
               ephemeral-storage: 200Mi
             limits:
               cpu: 500m
-              memory: 500Mi
+              memory: 512Mi
               ephemeral-storage: 200Mi
           ports:
             - containerPort: 5001
@@ -458,7 +458,7 @@ kind: Deployment
 metadata:
   name: ${{ defaults.app_name }}-web
   annotations:
-    originImageName: langgenius/dify-web:1.1.3
+    originImageName: langgenius/dify-web:1.4.1
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -514,7 +514,7 @@ spec:
               echo "Dify database is ready"
       containers:
         - name: ${{ defaults.app_name }}-web
-          image: langgenius/dify-web:1.1.3
+          image: langgenius/dify-web:1.4.1
           env:
             - name: EDITION
               value: SELF_HOSTED
@@ -538,7 +538,7 @@ spec:
               memory: 256Mi
             limits:
               cpu: 500m
-              memory: 500Mi
+              memory: 512Mi
           ports:
             - containerPort: 3000
           imagePullPolicy: IfNotPresent
@@ -613,7 +613,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ${{ defaults.app_name }}-sandbox
-          image: langgenius/dify-sandbox:0.2.11
+          image: langgenius/dify-sandbox:0.2.12
           env:
             - name: API_KEY
               value: dify-sandbox
@@ -630,7 +630,7 @@ spec:
               ephemeral-storage: 200Mi
             limits:
               cpu: 500m
-              memory: 500Mi
+              memory: 512Mi
               ephemeral-storage: 200Mi
           ports:
             - containerPort: 8194
@@ -729,7 +729,7 @@ spec:
               echo "Dify database is ready"
       containers:
         - name: ${{ defaults.app_name }}-plugin-daemon
-          image: langgenius/dify-plugin-daemon:0.0.6-local
+          image: langgenius/dify-plugin-daemon:0.1.1-local
           env:
             - name: DB_USERNAME
               valueFrom:
@@ -806,7 +806,7 @@ spec:
               ephemeral-storage: 200Mi
             limits:
               cpu: 500m
-              memory: 500Mi
+              memory: 512Mi
               ephemeral-storage: 200Mi
           ports:
             - name: server-port
