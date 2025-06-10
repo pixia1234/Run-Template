@@ -11,6 +11,7 @@ spec:
   url: 'https://github.com/QuantumNous/new-api'
   gitRepo: 'https://github.com/QuantumNous/new-api'
   description: 'A lightweight backend API service powered by MySQL and Redis.'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/new-api/README.md'
   icon: 'https://avatars.githubusercontent.com/u/205075698?s=48&v=4'
   templateType: inline
   locale: en
