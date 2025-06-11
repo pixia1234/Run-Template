@@ -16,7 +16,7 @@ spec:
   templateType: inline
   locale: en
   categories:
-    - tools
+    - tool
   defaults:
     app_host:
       type: string
