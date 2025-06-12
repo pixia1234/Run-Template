@@ -139,7 +139,7 @@ spec:
               memory: 128Mi
             limits:
               cpu: 500m
-              memory: 1280Mi
+              memory: 1024Mi
           ports:
             - name: http
               protocol: TCP
