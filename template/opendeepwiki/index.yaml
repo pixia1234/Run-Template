@@ -1,0 +1,378 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: OpenDeepWiki
+spec:
+  title: 'OpenDeepWiki'
+  type: official
+  author: ClawCloud Run
+  author_id: 180503656
+  date: 2025-06-09
+  url: 'https://opendeep.wiki'              
+  gitRepo: 'https://github.com/AIDotNet/OpenDeepWiki'                                                 
+  description: 'An innovative, open-source platform designed to serve as a comprehensive knowledge base for deep learning enthusiasts, researchers, and developers.'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/opendeepwiki/README.md' 
+  icon: 'https://opendeep.wiki/logo.png'                             
+  templateType: inline
+  locale: en
+  defaults:
+    wiki_image:
+      type: string 
+      value: crpi-owsezg1fzb71ozfl.cn-beijing.personal.cr.aliyuncs.com/ifzzh520/koala-wiki:stable
+    wiki_web_image:
+      type: string 
+      value: crpi-owsezg1fzb71ozfl.cn-beijing.personal.cr.aliyuncs.com/ifzzh520/koala-wiki-web:stable
+    web_port_name:
+      type: string
+      value: ${{ random(12) }}
+    wiki_port_name:
+      type: string
+      value: ${{ random(12) }}
+    app_host:
+      type: string
+      value: ${{ random(12) }}
+    app_name:
+      type: string
+      value: opendeepwiki-${{ random(8) }}
+    web_host:
+      type: string
+      value: ${{ random(12) }}
+    web_name:
+      type: string
+      value: opendeepwiki-web-${{ random(8) }}
+    model:
+      type: string
+      value: DeepSeek-V3
+    api_server:
+      type: string
+      value: https://api.token-ai.cn/v1
+  inputs:
+    wiki_image:
+      description: ''
+      type: string
+      default: ${{ defaults.wiki_image }}
+    wiki_web_image:
+      description: ''
+      type: string
+      default: ${{ defaults.wiki_web_image }}
+    chat_model:
+      description: ''
+      type: string
+      default: ${{ defaults.model }}
+      required: true
+    analysis_model:
+      description: ''
+      type: string
+      default: ${{ defaults.model }}
+      required: true
+    api_endpoint:
+      description: ''
+      type: string
+      default: ${{ defaults.api_server }}
+      required: true
+    api_key:
+      description: ''
+      type: string
+      default: ''
+      required: true
+    LANGUAGE:
+      description: '中文 / English'
+      type: string
+      default: 'English'
+    KOALAWIKI_REPOSITORIES:
+      description: ''
+      type: string
+      default: '/repositories'
+    TASK_MAX_SIZE_PER_USER:
+      description: ''
+      type: string
+      default: '5'
+    REPAIR_MERMAID:
+      description: ''
+      type: string
+      default: '1'
+    DB_TYPE:
+      description: ''
+      type: string
+      default: 'sqlite'
+    DB_CONNECTION_STRING:
+      description: ''
+      type: string
+      default: 'Data Source=/data/KoalaWiki.db'
+    UPDATE_INTERVAL:
+      description: ''
+      type: string
+      default: '5'
+    EnableSmartFilter:
+      description: ''
+      type: string
+      default: 'true'
+    ENABLE_INCREMENTAL_UPDATE:
+      description: ''
+      type: string
+      default: 'true'
+    volume_size_repositories:
+      description: ''
+      type: string
+      default: '3'
+      required: true
+    volume_size_data:
+      description: ''
+      type: string
+      default: '1'
+      required: true
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${{ defaults.app_name }}
+  annotations:
+    originImageName: ${{ inputs.wiki_image }}      
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  minReadySeconds: 10
+  serviceName: ${{ defaults.app_name }}
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: ${{ defaults.app_name }}
+          image: ${{ inputs.wiki_image }}                                 #Your app's Docker image url
+          env: 
+            - name: KOALAWIKI_REPOSITORIES
+              value: ${{ inputs.KOALAWIKI_REPOSITORIES }}
+            - name: TASK_MAX_SIZE_PER_USER
+              value: ${{ inputs.TASK_MAX_SIZE_PER_USER }}
+            - name: REPAIR_MERMAID
+              value: ${{ inputs.REPAIR_MERMAID }}
+            - name: CHAT_MODEL
+              value: ${{ inputs.chat_model }}
+            - name: ANALYSIS_MODEL
+              value: ${{ inputs.analysis_model }}
+            - name: CHAT_API_KEY
+              value: ${{ inputs.api_key }}
+            - name: ENDPOINT
+              value: ${{ inputs.api_endpoint }}
+            - name: DB_TYPE
+              value: ${{ inputs.DB_TYPE }}
+            - name: DB_CONNECTION_STRING
+              value: ${{ inputs.DB_CONNECTION_STRING }}
+            - name: UPDATE_INTERVAL
+              value: ${{ inputs.UPDATE_INTERVAL }}
+            - name: EnableSmartFilter
+              value: ${{ inputs.EnableSmartFilter }}
+          resources:
+            requests:
+              cpu: 20m
+              memory: 204Mi
+            limits:
+              cpu: 200m
+              memory: 2048Mi
+          command: []
+          args: []
+          ports:
+            - containerPort: 8080
+              name: ${{ defaults.wiki_port_name }}
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: vn-data
+              mountPath: /data
+            - name: vn-appvn-repositories
+              mountPath: /app/repositories
+      volumes: []
+  volumeClaimTemplates:
+    - metadata:
+        annotations:
+          path: /data
+          value: '1'
+        name: vn-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${{ inputs.volume_size_data }}Gi
+    - metadata:
+        annotations:
+          path: /app/repositories
+          value: '3'
+        name: vn-appvn-repositories
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${{ inputs.volume_size_repositories }}Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: ${{ defaults.wiki_port_name }}
+    protocol: TCP
+  selector:
+    app: ${{ defaults.app_name }}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.web_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.web_name }}
+spec:
+  ports:
+  - port: 3000
+    targetPort: 3000
+    name: ${{ defaults.web_port_name }}
+    protocol: TCP
+  selector:
+    app: ${{ defaults.web_name }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.web_name }}
+  annotations:
+    originImageName: ${{ inputs.wiki_web_image }}   
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    app: ${{ defaults.web_name }}
+    run.claw.cloud/app-deploy-manager: ${{ defaults.web_name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.web_name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.web_name }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.web_name }}
+          image: ${{ inputs.wiki_web_image }}   
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+          resources:
+            requests:
+              cpu: 20m
+              memory: 25Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          ports:
+            - containerPort: 3000
+              name: ${{ defaults.web_port_name }}
+          imagePullPolicy: IfNotPresent
+          volumeMounts: []
+      volumes: []
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.web_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.web_name }}
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.web_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+spec:
+  rules:
+    - host: ${{ defaults.web_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.web_name }}
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - ${{ defaults.web_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
