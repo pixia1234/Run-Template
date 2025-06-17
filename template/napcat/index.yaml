@@ -66,8 +66,8 @@ spec:
               cpu: 100m
               memory: 102Mi
             limits:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 2000m
+              memory: 2560Mi
           command: []
           args: []
           ports:
