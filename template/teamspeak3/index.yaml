@@ -81,8 +81,8 @@ spec:
               cpu: 100m
               memory: 128Mi
             limits:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 2000m
+              memory: 2560Mi
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: ts3server-data
