@@ -62,11 +62,11 @@ spec:
             - containerPort: 3002
           resources:
             requests:
-              cpu: 20m
+              cpu: 50m
               memory: 12Mi
             limits:
-              cpu: 200m
-              memory: 128Mi
+              cpu: 1000m
+              memory: 256Mi
           volumeMounts:
             - name: app-data
               mountPath: /app/conf
