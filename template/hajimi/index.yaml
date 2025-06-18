@@ -1,0 +1,250 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: hajimi
+spec:
+  title: 'Hajimi AI Proxy'
+  type: official
+  author: ClawCloud Run
+  author_id: 180503656
+  date: 2025-06-18
+  url: 'https://github.com/wyeeeee/hajimi'
+  gitRepo: 'https://github.com/wyeeeee/hajimi'
+  description: 'An AI proxy service with support for Gemini API and optional search or Vertex AI integration.'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/hajimi/README.md' 
+  icon: 'https://avatars.githubusercontent.com/u/16321862?s=48&v=4'   
+  templateType: inline
+  locale: en
+  categories:
+    - ai
+  defaults:
+    app_name:
+      type: string
+      value: hajimi-${{ random(8) }}
+    app_host:
+      type: string
+      value: ${{ random(8) }}
+  inputs:
+    password:
+      description: 'password'
+      type: string
+      default: '${{ random(16) }}'
+      required: false
+    tz:
+      description: 'timezone'
+      type: string
+      default: 'Asia/Shanghai'
+      required: false
+    gemini_api_keys:
+      description: 'Comma-separated list of Gemini API keys'
+      type: string
+      default: 'key1,key2,key3'
+      required: false
+    max_requests_per_minute:
+      description: 'Maximum requests per minute'
+      type: number
+      default: "30"
+      required: false
+    max_requests_per_day_per_ip:
+      description: 'Maximum requests per day per IP'
+      type: number
+      default: "600"
+      required: false
+    fake_streaming:
+      description: 'Enable fake streaming mode'
+      type: boolean
+      default: 'true'
+      required: false
+    api_key_daily_limit:
+      description: 'Daily limit for API key usage'
+      type: number
+      default: "100"
+      required: false
+    max_empty_responses:
+      description: 'Maximum number of empty responses before stopping requests'
+      type: number
+      default: "5"
+      required: false
+    random_string:
+      description: 'Enable random string generation for requests'
+      type: boolean
+      default: 'true'
+      required: false
+    random_string_length:
+      description: 'Length of the random string to be generated'
+      type: number
+      default: "5"
+      required: false
+    concurrent_requests:
+      description: 'Number of concurrent requests to handle'
+      type: number
+      default: "1"
+      required: false
+    increase_concurrent_on_failure:
+      description: 'Increase concurrent requests on failure'
+      type: number
+      default: "0"
+      required: false
+    max_concurrent_requests:
+      description: 'Maximum number of concurrent requests allowed'
+      type: number
+      default: "3"
+      required: false
+    search_mode:
+      description: 'Enable search mode for fetching relevant information'
+      type: boolean
+      default: 'false'
+      required: false
+    search_prompt:
+      description: 'Prompt to use when searching for relevant information'
+      type: string
+      default: "('Use search tool to fetch relevant info')"
+      required: false
+    enable_vertex:
+      description: 'Enable Google Vertex AI for search'
+      type: boolean
+      default: 'false'
+      required: false
+    google_credentials_json:
+      description: 'Google credentials JSON for Vertex AI, base64 encoded'
+      type: string
+      default: ''
+      required: false
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}
+  annotations:
+    originImageName: ghcr.io/wyeeeee/hajimi:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}
+          image: ghcr.io/wyeeeee/hajimi:latest
+          env:
+            - name: PASSWORD
+              value: ${{ inputs.password }}
+            - name: TZ
+              value: ${{ inputs.tz }}
+            - name: GEMINI_API_KEYS
+              value: ${{ inputs.gemini_api_keys }}
+            - name: MAX_REQUESTS_PER_MINUTE
+              value: "${{ inputs.max_requests_per_minute }}"
+            - name: MAX_REQUESTS_PER_DAY_PER_IP
+              value: "${{ inputs.max_requests_per_day_per_ip }}"
+            - name: FAKE_STREAMING
+              value: "${{ inputs.fake_streaming }}"
+            - name: API_KEY_DAILY_LIMIT
+              value: "${{ inputs.api_key_daily_limit }}"
+            - name: MAX_EMPTY_RESPONSES
+              value: "${{ inputs.max_empty_responses }}"
+            - name: RANDOM_STRING
+              value: "${{ inputs.random_string }}"
+            - name: RANDOM_STRING_LENGTH
+              value: "${{ inputs.random_string_length }}"
+            - name: CONCURRENT_REQUESTS
+              value: "${{ inputs.concurrent_requests }}"
+            - name: INCREASE_CONCURRENT_ON_FAILURE
+              value: "${{ inputs.increase_concurrent_on_failure }}"
+            - name: MAX_CONCURRENT_REQUESTS
+              value: "${{ inputs.max_concurrent_requests }}"
+            - name: SEARCH_MODE
+              value: "${{ inputs.search_mode }}"
+            - name: SEARCH_PROMPT
+              value: ${{ inputs.search_prompt }}
+            - name: ENABLE_VERTEX
+              value: "${{ inputs.enable_vertex }}"
+            - name: GOOGLE_CREDENTIALS_JSON
+              value: ${{ inputs.google_credentials_json }}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 102Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+          command: []
+          args: []
+          ports:
+            - containerPort: 7860
+              name: ${{ defaults.app_name }}
+          imagePullPolicy: IfNotPresent
+          volumeMounts: []
+      volumes: []
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  ports:
+    - port: 7860
+      targetPort: 7860
+      name: ${{ defaults.app_name }}
+      protocol: TCP
+  selector:
+    app: ${{ defaults.app_name }}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}
+                port:
+                  number: 7860
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
