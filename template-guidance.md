@@ -480,6 +480,8 @@ spec:
 
 We using kubeblocks to provide database resources support.
 
+<details>
+
 <summary>MongoDB</summary>
 
 ```yaml
@@ -972,6 +974,9 @@ subjects:
   - kind: ServiceAccount
     name: ${{ defaults.app_name }}-weaviate
 ```
+
+</details>
+
 | Name        | Description             |
 | ----------- | ----------------------- |
 | `replicas`  | Number of instances     |
