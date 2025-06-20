@@ -1,6 +1,6 @@
-## Introduction to Alist
+## Introduction to OpenList
 
-Openlist is a versatile and lightweight file list program designed to streamline the management and sharing of files across multiple storage services. This project enables users to aggregate various storage sources into a unified interface, making it easier to browse, manage, and share files without switching platforms. With its modular design and extensive compatibility, Alist is suitable for both personal use and collaborative environments.
+Openlist is a versatile and lightweight file list program designed to streamline the management and sharing of files across multiple storage services. This project enables users to aggregate various storage sources into a unified interface, making it easier to browse, manage, and share files without switching platforms. With its modular design and extensive compatibility, OpenList is suitable for both personal use and collaborative environments.
 
 ### Key Features
 
@@ -20,7 +20,7 @@ Openlist is a versatile and lightweight file list program designed to streamline
 
 **Active Development and Community Support**: Backed by an active development team and a growing community, ensuring frequent updates, bug fixes, and feature enhancements.
 
-Alist empowers users to manage their files effortlessly while maintaining flexibility and security across diverse storage ecosystems. Whether you're an individual looking for a personal file manager or part of a team requiring shared access to resources, Alist provides the tools you need to stay organized and productive.
+OpenList empowers users to manage their files effortlessly while maintaining flexibility and security across diverse storage ecosystems. Whether you're an individual looking for a personal file manager or part of a team requiring shared access to resources, OpenList provides the tools you need to stay organized and productive.
 
 ### Notice
 
