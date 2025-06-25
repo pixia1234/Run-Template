@@ -79,10 +79,10 @@ spec:
           resources:
             requests:
               cpu: 20m
-              memory: 12Mi
+              memory: 25Mi
             limits:
-              cpu: 200m
-              memory: 128Mi
+              cpu: 400m
+              memory: 512Mi
           command: []
           args: []
           ports:
