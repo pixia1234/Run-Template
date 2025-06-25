@@ -83,8 +83,8 @@ spec:
               cpu: 100m
               memory: 102Mi
             limits:
-              cpu: 1000m
-              memory: 1024Mi
+              cpu: 300m
+              memory: 512Mi
           command: []
           args:
             - --spring.r2dbc.url=r2dbc:pool:postgresql://${{ defaults.app_name }}-pg-postgresql.${{ CLAWCLOUD_NAMESPACE }}.svc:5432/halo
@@ -203,8 +203,8 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 1000m
-          memory: 1024Mi
+          cpu: 300m
+          memory: 512Mi
         requests:
           cpu: 100m
           memory: 102Mi
