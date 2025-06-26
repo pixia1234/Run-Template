@@ -83,7 +83,7 @@ spec:
               cpu: 100m
               memory: 102Mi
             limits:
-              cpu: 300m
+              cpu: 500m
               memory: 512Mi
           command: []
           args:
