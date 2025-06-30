@@ -88,8 +88,8 @@ spec:
           cpu: 500m
           memory: 500Mi
         requests:
-          cpu: 50m
-          memory: 50Mi
+          cpu: 25m
+          memory: 25Mi
       serviceAccountName: ${{ defaults.app_name }}-db
       switchPolicy:
         type: Noop

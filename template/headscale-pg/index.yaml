@@ -65,8 +65,8 @@ spec:
           cpu: 1000m
           memory: 1024Mi
         requests:
-          cpu: 100m
-          memory: 102Mi
+          cpu: 50m
+          memory: 51Mi
       serviceAccountName: headscale-${{ defaults.app_suffix }}-pg
       switchPolicy:
         type: Noop
