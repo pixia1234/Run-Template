@@ -72,11 +72,11 @@ spec:
               value: true
           resources:
             requests:
-              cpu: 100m
-              memory: 250Mi
+              cpu: 50m
+              memory: 204Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1000m
+              memory: 2048Mi
           ports:
             - name: http
               protocol: TCP
