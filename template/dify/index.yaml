@@ -932,8 +932,8 @@ spec:
           cpu: 500m
           memory: 2Gi
         requests:
-          cpu: 200m
-          memory: 400Mi
+          cpu: 25m
+          memory: 102Mi
       serviceAccountName: ${{ defaults.app_name }}-pg
       switchPolicy:
         type: Noop
