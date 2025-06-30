@@ -254,8 +254,8 @@ spec:
               memory: 256Mi
               ephemeral-storage: 200Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1000m
+              memory: 2Gi
               ephemeral-storage: 200Mi
           ports:
             - containerPort: 5001
@@ -374,8 +374,8 @@ spec:
               memory: 256Mi
               ephemeral-storage: 200Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1000m
+              memory: 2Gi
               ephemeral-storage: 200Mi
           ports:
             - containerPort: 5001
@@ -537,8 +537,8 @@ spec:
               cpu: 100m
               memory: 256Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1
+              memory: 2Gi
           ports:
             - containerPort: 3000
           imagePullPolicy: IfNotPresent
@@ -590,7 +590,7 @@ kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}-sandbox
   annotations:
-    originImageName: langgenius/dify-sandbox:0.2.11
+    originImageName: langgenius/dify-sandbox:0.2.12
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -629,8 +629,8 @@ spec:
               memory: 128Mi
               ephemeral-storage: 200Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1
+              memory: 1Gi
               ephemeral-storage: 200Mi
           ports:
             - containerPort: 8194
@@ -670,7 +670,7 @@ kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}-plugin-daemon
   annotations:
-    originImageName: langgenius/dify-plugin-daemon:0.0.6-local
+    originImageName: langgenius/dify-plugin-daemon:0.1.1-local
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -805,8 +805,8 @@ spec:
               memory: 128Mi
               ephemeral-storage: 200Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1
+              memory: 1Gi
               ephemeral-storage: 200Mi
           ports:
             - name: server-port
@@ -929,11 +929,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 500m
-          memory: 2Gi
+          cpu: 2
+          memory: 4Gi
         requests:
-          cpu: 25m
-          memory: 102Mi
+          cpu: 100m
+          memory: 200Mi
       serviceAccountName: ${{ defaults.app_name }}-pg
       switchPolicy:
         type: Noop
@@ -1072,8 +1072,8 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 500m
-          memory: 1Gi
+          cpu: 2
+          memory: 4Gi
         requests:
           cpu: 100m
           memory: 400Mi
@@ -1176,11 +1176,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 500m
-          memory: 1Gi
+          cpu: 2
+          memory: 4Gi
         requests:
-          cpu: 200m
-          memory: 400Mi
+          cpu: 100m
+          memory: 200Mi
       rsmTransformPolicy: ToSts
       serviceAccountName: ${{ defaults.app_name }}-weaviate
       volumeClaimTemplates:
@@ -1198,19 +1198,3 @@ spec:
   storage:
     size: '0'
   terminationPolicy: Delete
-
----
-
-apiVersion: app.claw.cloud/v1
-kind: App
-metadata:
-  name: ${{ defaults.app_name }}-web
-  labels:
-    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-web
-spec:
-  data:
-    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
-  displayType: normal
-  icon: "https://avatars.githubusercontent.com/u/127165244?s=200&v=4"
-  name: ${{ defaults.app_name }}
-  type: link
