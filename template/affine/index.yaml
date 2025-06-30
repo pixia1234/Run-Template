@@ -115,10 +115,10 @@ spec:
               value: production
           resources:
             requests:
-              cpu: 100m
-              memory: 204Mi
+              cpu: 50m
+              memory: 102Mi
             limits:
-              cpu: 800m
+              cpu: 1000m
               memory: 1024Mi
           ports:
             - name: http
