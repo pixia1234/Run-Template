@@ -1,0 +1,222 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: archivebox
+spec:
+  title: 'ArchiveBox'
+  type: official
+  author: ClawCloud Run
+  author_id: 180503656
+  date: 2025-07-02
+  url: 'https://github.com/ArchiveBox/ArchiveBox'
+  gitRepo: 'https://github.com/ArchiveBox/ArchiveBox'
+  description: 'Self-hosted archival platform that catalogs websites, static files, and media.'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/archivebox/README.md'
+  icon: 'https://avatars.githubusercontent.com/u/74894248?s=48&v=4'
+  templateType: inline
+  locale: en
+  categories:
+    - tool
+  defaults:
+    app_name:
+      type: string
+      value: archivebox-${{ random(8) }}
+    app_host:
+      type: string
+      value: ${{ random(8) }}
+    admin_username:
+      type: string
+      value: admin
+    admin_password:
+      type: string
+      value: ${{ random(12) }}
+    public_index:
+      type: boolean
+      value: 'true'
+    public_snapshots:
+      type: boolean
+      value: 'true'
+    public_add_view:
+      type: boolean
+      value: 'false'
+    search_backend_engine:
+      type: string
+      value: sonic
+    search_backend_host:
+      type: string
+      value: sonic
+    search_backend_password:
+      type: string
+      value: ${{ random(12) }}
+    timezone:
+      type: string
+      value: UTC
+  inputs:
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}
+  annotations:
+    originImageName: archivebox/archivebox:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}
+          image: archivebox/archivebox:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ADMIN_USERNAME
+              value: ${{ defaults.admin_username }}
+            - name: ADMIN_PASSWORD
+              value: ${{ defaults.admin_password }}
+            - name: CSRF_TRUSTED_ORIGINS
+              value: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}:8000
+            - name: PUBLIC_INDEX
+              value: ${{ defaults.public_index }}
+            - name: PUBLIC_SNAPSHOTS
+              value: ${{ defaults.public_snapshots }}
+            - name: PUBLIC_ADD_VIEW
+              value: ${{ defaults.public_add_view }}
+            - name: SEARCH_BACKEND_ENGINE
+              value: ${{ defaults.search_backend_engine }}
+            - name: SEARCH_BACKEND_HOST_NAME
+              value: ${{ defaults.search_backend_host }}
+            - name: SEARCH_BACKEND_PASSWORD
+              value: ${{ defaults.search_backend_password }}
+            - name: TIMEZONE
+              value: ${{ defaults.timezone }}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 25Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          emptyDir: {}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}-sonic
+  annotations:
+    originImageName: archivebox/sonic:latest
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-sonic
+    app: ${{ defaults.app_name }}-sonic
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-sonic
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-sonic
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-sonic
+          image: archivebox/sonic:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SEARCH_BACKEND_PASSWORD
+              value: ${{ defaults.search_backend_password }}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 25Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          volumeMounts:
+            - name: sonic-data
+              mountPath: /var/lib/sonic/store
+      volumes:
+        - name: sonic-data
+          emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  selector:
+    app: ${{ defaults.app_name }}
+  ports:
+    - port: 8000
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_uri ~* \.(js|css|gif|jpe?g|png)) {
+        expires 30d;
+        add_header Cache-Control "public";
+      }
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /()(.*)
+            backend:
+              service:
+                name: ${{ defaults.app_name }}
+                port:
+                  number: 8000
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
