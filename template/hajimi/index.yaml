@@ -181,8 +181,8 @@ spec:
               value: ${{ inputs.google_credentials_json }}
           resources:
             requests:
-              cpu: 100m
-              memory: 102Mi
+              cpu: 50m
+              memory: 51Mi
             limits:
               cpu: 1000m
               memory: 1024Mi
