@@ -331,8 +331,8 @@ spec:
               cpu: 20m
               memory: 25Mi
             limits:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 400m
+              memory: 512Mi
           ports:
             - containerPort: 3000
               name: ${{ defaults.web_port_name }}

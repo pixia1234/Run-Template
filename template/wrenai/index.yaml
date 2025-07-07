@@ -247,8 +247,8 @@ spec:
             value: /app/data/config.yaml
         resources:
           requests:
-            cpu: 200m
-            memory: 200Mi
+            cpu: 50m
+            memory: 51Mi
           limits:
             cpu: 1
             memory: 1Gi
@@ -328,8 +328,8 @@ spec:
             value: ${{ inputs.embedder_openai_api_key }}
         resources:
           requests:
-            cpu: 200m
-            memory: 400Mi
+            cpu: 50m
+            memory: 51Mi
           limits:
             cpu: 1000m
             memory: 1024Mi
@@ -408,8 +408,8 @@ spec:
             value: INFO
         resources:
           requests:
-            cpu: 100m
-            memory: 102Mi
+            cpu: 25m
+            memory: 51Mi
           limits:
             cpu: 500m
             memory: 512Mi
@@ -522,8 +522,8 @@ spec:
             - ./config/initialize.sh
           resources:
             requests:
-              cpu: 200m
-              memory: 400Mi
+              cpu: 50m
+              memory: 51Mi
             limits:
               cpu: 1000m
               memory: 1024Mi
@@ -708,8 +708,8 @@ spec:
             value: http://${{ defaults.app_name }}-ibis-server:8000
         resources:
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: 25m
+            memory: 25Mi
           limits:
             cpu: 500m
             memory: 512Mi

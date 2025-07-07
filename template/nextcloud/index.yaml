@@ -102,10 +102,10 @@ spec:
               value: /var/www/html/data
           resources:
             requests:
-              cpu: 100m
-              memory: 102Mi
+              cpu: 20m
+              memory: 51Mi
             limits:
-              cpu: 300m
+              cpu: 400m
               memory: 512Mi
           command: []
           args: []
@@ -213,8 +213,8 @@ spec:
           cpu: 500m
           memory: 512Mi
         requests:
-          cpu: 100m
-          memory: 102Mi
+          cpu: 25m
+          memory: 25Mi
       serviceAccountName: ${{ defaults.app_name }}-mysql
       volumeClaimTemplates:
         - name: data

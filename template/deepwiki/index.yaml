@@ -84,8 +84,8 @@ spec:
               value: ${{ inputs.OPENAI_API_KEY }}
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 50m
+              memory: 102Mi
             limits:
               cpu: 500m
               memory: 1Gi

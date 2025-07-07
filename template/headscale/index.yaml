@@ -107,8 +107,8 @@ spec:
           command: ["headscale", "serve"]
           resources:
             requests:
-              cpu: 50m
-              memory: 64Mi
+              cpu: 25m
+              memory: 51Mi
             limits:
               cpu: 500m
               memory: 512Mi
@@ -159,8 +159,8 @@ spec:
               cpu: 10m
               memory: 25Mi
             limits:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 200m
+              memory: 512Mi
           ports:
             - name: http
               protocol: TCP

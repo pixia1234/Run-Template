@@ -143,9 +143,9 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 256Mi
+              memory: 102Mi
             limits:
-              cpu: 500m
+              cpu: 1000m
               memory: 1Gi
           command: []
           args: []
@@ -330,8 +330,8 @@ spec:
           cpu: 500m
           memory: 512Mi
         requests:
-          cpu: 50m
-          memory: 128Mi
+          cpu: 25m
+          memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-mongo
       volumeClaimTemplates:
         - name: data

@@ -225,8 +225,8 @@ spec:
               value: 'n8n'
           resources:
             requests:
-              cpu: 50m
-              memory: 51Mi
+              cpu: 25m
+              memory: 25Mi
             limits:
               cpu: 500m
               memory: 512Mi

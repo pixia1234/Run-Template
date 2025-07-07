@@ -19,14 +19,12 @@ spec:
     - tool
   defaults:
     app_host_admin:
-      # number or string..
       type: string
       value: frp-${{ random(8) }}
     app_name:
       type: string
       value: frp-${{ random(8) }}
     app_host_http:
-      # number or string..
       type: string
       value: frp-${{ random(8) }}
     app_name1:
@@ -102,8 +100,8 @@ spec:
               cpu: 10m
               memory: 12Mi
             limits:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 200m
+              memory: 256Mi
           ports:
             - containerPort: 7500
               name: admin

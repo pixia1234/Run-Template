@@ -79,8 +79,8 @@ spec:
               cpu: 50m
               memory: 51Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1000m
+              memory: 1024Mi
           ports:
             - containerPort: 3000
             - containerPort: 2222
@@ -253,11 +253,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 500m
+          cpu: 1000m
           memory: 512Mi
         requests:
           cpu: 100m
-          memory: 102Mi
+          memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-mysql
       volumeClaimTemplates:
         - name: data
