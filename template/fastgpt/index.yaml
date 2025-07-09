@@ -154,11 +154,11 @@ spec:
               value: '50'
           resources:
             requests:
-              cpu: 50m
-              memory: 102Mi
+              cpu: 25m
+              memory: 51Mi
             limits:
-              cpu: 1000m
-              memory: 2Gi
+              cpu: 500m
+              memory: 1Gi
           command: []
           args: []
           ports:
@@ -312,10 +312,10 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 102Mi
+              memory: 51Mi
             limits:
               cpu: 1000m
-              memory: 2048Mi
+              memory: 1024Mi
           ports:
             - containerPort: 3000
               name: ${{ random(12) }}
@@ -373,10 +373,10 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 102Mi
+              memory: 51Mi
             limits:
               cpu: 1000m
-              memory: 2048Mi
+              memory: 1024Mi
           ports:
             - containerPort: 3000
           imagePullPolicy: IfNotPresent
@@ -434,10 +434,10 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 102Mi
+              memory: 51Mi
             limits:
               cpu: 1000m
-              memory: 2048Mi
+              memory: 1024Mi
           ports:
             - containerPort: 3000
           imagePullPolicy: IfNotPresent
@@ -516,10 +516,10 @@ spec:
       resources:
         limits:
           cpu: 1000m
-          memory: 2Gi
+          memory: 1Gi
         requests:
           cpu: 50m
-          memory: 102Mi
+          memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-mongo
       volumeClaimTemplates:
         - name: data
@@ -600,11 +600,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 1000m
-          memory: 2Gi
+          cpu: 500m
+          memory: 1Gi
         requests:
-          cpu: 50m
-          memory: 102Mi
+          cpu: 25m
+          memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-pg
       switchPolicy:
         type: Noop
@@ -690,8 +690,8 @@ spec:
           cpu: 1000m
           memory: 1024Mi
         requests:
-          cpu: 1000m
-          memory: 1024Mi
+          cpu: 50m
+          memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-redis
       switchPolicy:
         type: Noop
@@ -710,11 +710,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 2000m
-          memory: 2048Mi
+          cpu: 1000m
+          memory: 1024Mi
         requests:
-          cpu: 100m
-          memory: 102Mi
+          cpu: 50m
+          memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-redis
 
   terminationPolicy: Delete
