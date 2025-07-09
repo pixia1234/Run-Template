@@ -295,13 +295,6 @@ spec:
             - -c
             - |
               until psql ${DATABASE_URL} -c 'CREATE DATABASE halo;' &>/dev/null; do sleep 1; done
-          resources:
-            limits:
-              cpu: 450m
-              memory: 512Mi
-            requests:
-              cpu: 50m
-              memory: 51Mi
       restartPolicy: Never
   backoffLimit: 0
   ttlSecondsAfterFinished: 300
