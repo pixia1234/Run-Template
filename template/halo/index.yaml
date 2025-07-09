@@ -43,7 +43,7 @@ kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}
   annotations:
-    originImageName: halohub/halo:2.18.0
+    originImageName: halohub/halo:2
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -66,7 +66,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ${{ defaults.app_name }}
-          image: halohub/halo:2.18.0
+          image: halohub/halo:2
           env:
             - name: PG_PASSWORD
               valueFrom:
@@ -80,7 +80,7 @@ spec:
                   key: username
           resources:
             requests:
-              cpu: 100m
+              cpu: 80m
               memory: 102Mi
             limits:
               cpu: 500m
@@ -117,7 +117,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
 
 ---
 
@@ -206,8 +206,8 @@ spec:
           cpu: 300m
           memory: 512Mi
         requests:
-          cpu: 100m
-          memory: 102Mi
+          cpu: 80m
+          memory: 80Mi
       serviceAccountName: ${{ defaults.app_name }}-pg
       switchPolicy:
         type: Noop
@@ -297,7 +297,7 @@ spec:
               until psql ${DATABASE_URL} -c 'CREATE DATABASE halo;' &>/dev/null; do sleep 1; done
           resources:
             limits:
-              cpu: 500m
+              cpu: 450m
               memory: 512Mi
             requests:
               cpu: 50m
