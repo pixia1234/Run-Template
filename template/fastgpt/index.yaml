@@ -30,25 +30,17 @@ spec:
     root_key:
       type: string
       value: ${{ random(8) }}
+    aiproxy_key:
+      type: string
+      value: ${{ random(8) }}
   inputs:
     root_password:
-      description: 'Root User''s Password'
-      type: string
-      default: ''
-      required: true
-    base_url:
-      description: 'API Base URL'
-      type: string
-      default: 'https://api.openai.com/v1'
-      required: true
-    api_key:
-      description: 'API Key'
+      description: 'root user''s password，username is: root'
       type: string
       default: ''
       required: true
 
 ---
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -59,7 +51,6 @@ metadata:
   name: ${{ defaults.app_name }}-mongo
 
 ---
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -70,13 +61,22 @@ metadata:
   name: ${{ defaults.app_name }}-pg
 
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
 
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ${{ defaults.app_name }}
   annotations:
-    originImageName: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.22
+    originImageName: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.9.10
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -96,7 +96,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ${{ defaults.app_name }}
-          image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.22
+          image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.9.10
           env:
             - name: MONGO_PASSWORD
               valueFrom:
@@ -108,10 +108,19 @@ spec:
                 secretKeyRef:
                   name: ${{ defaults.app_name }}-pg-conn-credential
                   key: password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: password
             - name: FE_DOMAIN
               value: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
             - name: DEFAULT_ROOT_PSW
               value: ${{ inputs.root_password }}
+            - name: AIPROXY_API_ENDPOINT
+              value: http://${{ defaults.app_name }}-aiproxy.${{ CLAWCLOUD_NAMESPACE }}.svc:3000
+            - name: AIPROXY_API_TOKEN
+              value: ${{ defaults.aiproxy_key }}
             - name: OPENAI_BASE_URL
               value: ${{ inputs.base_url }}
             - name: CHAT_API_KEY
@@ -130,6 +139,9 @@ spec:
             - name: PG_URL
               value: >-
                 postgresql://postgres:$(PG_PASSWORD)@${{ defaults.app_name }}-pg-postgresql.${{ CLAWCLOUD_NAMESPACE }}.svc:5432/postgres
+            - name: REDIS_URL
+              value: >-
+                redis://default:$(REDIS_PASSWORD)@${{ defaults.app_name }}-redis-redis.${{ CLAWCLOUD_NAMESPACE }}.svc:6379
             - name: SANDBOX_URL
               value: http://${{ defaults.app_name }}-sandbox.${{ CLAWCLOUD_NAMESPACE }}.svc.cluster.local:3000
             - name: LOG_LEVEL
@@ -146,7 +158,7 @@ spec:
               memory: 102Mi
             limits:
               cpu: 1000m
-              memory: 1Gi
+              memory: 2Gi
           command: []
           args: []
           ports:
@@ -173,7 +185,8 @@ data:
   vn-appvn-datavn-configvn-json: |
     {
       "feConfigs": {
-        "lafEnv": "https://laf.dev" 
+        "lafEnv": "https://laf.dev" ,
+        "mcpServerProxyEndpoint": "http://${{ defaults.app_host }}-mcp-server.${{ CLAWCLOUD_CLOUD_DOMAIN }}"
       },
       "systemEnv": {
         "vectorMaxProcess": 15, 
@@ -237,6 +250,83 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: ${{ defaults.app_name }}-aiproxy
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-aiproxy
+spec:
+  ports:
+    - port: 3000
+  selector:
+    app: ${{ defaults.app_name }}-aiproxy
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}-aiproxy
+  annotations:
+    originImageName: ghcr.io/labring/aiproxy:v0.1.7
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+    deploy.run.claw.cloud/resize: 0Gi
+  labels:
+    app: ${{ defaults.app_name }}-aiproxy
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-aiproxy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-aiproxy
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-aiproxy
+          image: ghcr.io/labring/aiproxy:v0.1.7
+          env:
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: password
+            - name: ADMIN_KEY
+              value: ${{ defaults.aiproxy_key }}
+            - name: LOG_DETAIL_STORAGE_HOURS
+              value: '1'
+            - name: DISABLE_MODEL_CONFIG
+              value: 'true'
+            - name: SQL_DSN
+              value: >-
+                postgresql://postgres:$(PG_PASSWORD)@${{ defaults.app_name }}-pg-postgresql.${{ CLAWCLOUD_NAMESPACE }}.svc:5432/postgres
+            - name: TZ
+              value: Asia/Shanghai
+          resources:
+            requests:
+              cpu: 50m
+              memory: 102Mi
+            limits:
+              cpu: 1000m
+              memory: 2048Mi
+          ports:
+            - containerPort: 3000
+              name: ${{ random(12) }}
+          imagePullPolicy: Always
+          volumeMounts: []
+      volumes: []
+
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: ${{ defaults.app_name }}-sandbox
   labels:
     run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-sandbox
@@ -252,7 +342,7 @@ kind: Deployment
 metadata:
   name: ${{ defaults.app_name }}-sandbox
   annotations:
-    originImageName: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.8.22
+    originImageName: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.9.10
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
     deploy.run.claw.cloud/resize: 0Gi
@@ -278,20 +368,118 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ${{ defaults.app_name }}-sandbox
-          image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.8.22
+          image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.9.10
           env: []
           resources:
             requests:
               cpu: 50m
               memory: 102Mi
             limits:
-              cpu: 200m
-              memory: 512Mi
+              cpu: 1000m
+              memory: 2048Mi
           ports:
             - containerPort: 3000
           imagePullPolicy: IfNotPresent
           volumeMounts: []
       volumes: []
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-mcp-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-mcp-server
+spec:
+  ports:
+    - port: 3000
+  selector:
+    app: ${{ defaults.app_name }}-mcp-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}-mcp-server
+  annotations:
+    originImageName: ghcr.io/labring/fastgpt-mcp_server:v4.9.10
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+    deploy.run.claw.cloud/resize: 0Gi
+  labels:
+    app: ${{ defaults.app_name }}-mcp-server
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-mcp-server
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-mcp-server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-mcp-server
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-mcp-server
+          image: ghcr.io/labring/fastgpt-mcp_server:v4.9.10
+          env: 
+          - name: FASTGPT_ENDPOINT
+            value: http://${{ defaults.app_name }}.${{ CLAWCLOUD_NAMESPACE }}.svc.cluster.local:3000
+          resources:
+            requests:
+              cpu: 50m
+              memory: 102Mi
+            limits:
+              cpu: 1000m
+              memory: 2048Mi
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: IfNotPresent
+          volumeMounts: []
+      volumes: []
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}-mcp-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-mcp-server
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}-mcp-server
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}-mcp-server.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}-mcp-server
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
 
 ---
 apiVersion: apps.kubeblocks.io/v1alpha1
@@ -327,11 +515,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 500m
-          memory: 512Mi
+          cpu: 1000m
+          memory: 2Gi
         requests:
-          cpu: 25m
-          memory: 51Mi
+          cpu: 50m
+          memory: 102Mi
       serviceAccountName: ${{ defaults.app_name }}-mongo
       volumeClaimTemplates:
         - name: data
@@ -346,7 +534,6 @@ spec:
   tolerations: []
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -413,11 +600,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 500m
-          memory: 512Mi
+          cpu: 1000m
+          memory: 2Gi
         requests:
-          cpu: 25m
-          memory: 25Mi
+          cpu: 50m
+          memory: 102Mi
       serviceAccountName: ${{ defaults.app_name }}-pg
       switchPolicy:
         type: Noop
@@ -434,7 +621,6 @@ spec:
   tolerations: []
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -467,3 +653,103 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: ${{ defaults.app_name }}-pg
+
+---
+apiVersion: apps.kubeblocks.io/v1alpha1
+kind: Cluster
+metadata:
+  finalizers:
+    - cluster.kubeblocks.io/finalizer
+  labels:
+    clusterdefinition.kubeblocks.io/name: redis
+    clusterversion.kubeblocks.io/name: redis-7.0.6
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+  annotations: {}
+  name: ${{ defaults.app_name }}-redis
+spec:
+  affinity:
+    nodeLabels: {}
+    podAntiAffinity: Preferred
+    tenancy: SharedNode
+    topologyKeys: []
+  clusterDefinitionRef: redis
+  clusterVersionRef: redis-7.0.6
+  backup:
+    enabled: true
+    cronExpression: 0 18 * * *
+    method: backupTool
+    pitrEnabled: false
+    retentionPeriod: 7d
+  componentSpecs:
+    - componentDefRef: redis
+      monitor: true
+      name: redis
+      replicas: 1
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1024Mi
+        requests:
+          cpu: 1000m
+          memory: 1024Mi
+      serviceAccountName: ${{ defaults.app_name }}-redis
+      switchPolicy:
+        type: Noop
+      volumeClaimTemplates:
+        - name: data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 3Gi
+            storageClassName: openebs-backup
+    - componentDefRef: redis-sentinel
+      monitor: true
+      name: redis-sentinel
+      replicas: 1
+      resources:
+        limits:
+          cpu: 2000m
+          memory: 2048Mi
+        requests:
+          cpu: 100m
+          memory: 102Mi
+      serviceAccountName: ${{ defaults.app_name }}-redis
+
+  terminationPolicy: Delete
+  tolerations: []
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - '*'
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ${{ defaults.app_name }}-redis
+subjects:
+  - kind: ServiceAccount
+    name: ${{ defaults.app_name }}-redis
