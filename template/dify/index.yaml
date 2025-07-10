@@ -251,10 +251,10 @@ spec:
           resources:
             requests:
               cpu: 200m
-              memory: 256Mi
+              memory: 204Mi
               ephemeral-storage: 200Mi
             limits:
-              cpu: 1000m
+              cpu: 2000m
               memory: 2Gi
               ephemeral-storage: 200Mi
           ports:
@@ -535,7 +535,7 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 256Mi
+              memory: 204Mi
             limits:
               cpu: 1
               memory: 2Gi
@@ -626,7 +626,7 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 128Mi
+              memory: 102Mi
               ephemeral-storage: 200Mi
             limits:
               cpu: 1
@@ -802,7 +802,7 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 128Mi
+              memory: 102Mi
               ephemeral-storage: 200Mi
             limits:
               cpu: 1
@@ -929,11 +929,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 2
-          memory: 4Gi
+          cpu: 1
+          memory: 2Gi
         requests:
           cpu: 100m
-          memory: 200Mi
+          memory: 204Mi
       serviceAccountName: ${{ defaults.app_name }}-pg
       switchPolicy:
         type: Noop
@@ -1072,11 +1072,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 2
-          memory: 4Gi
+          cpu: 1
+          memory: 2Gi
         requests:
           cpu: 100m
-          memory: 400Mi
+          memory: 200Mi
       serviceAccountName: ${{ defaults.app_name }}-redis
       switchPolicy:
         type: Noop
@@ -1176,8 +1176,8 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 2
-          memory: 4Gi
+          cpu: 1
+          memory: 2Gi
         requests:
           cpu: 100m
           memory: 200Mi

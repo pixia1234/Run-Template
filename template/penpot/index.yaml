@@ -379,7 +379,7 @@ spec:
               value: false
           resources:
             requests:
-              cpu: 1000m
+              cpu: 100m
               memory: 102Mi
             limits:
               cpu: 1000m

@@ -94,8 +94,8 @@ spec:
               cpu: 50m
               memory: 51Mi
             limits:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 500m
+              memory: 512Mi
           ports:
             - name: http
               containerPort: 1200
@@ -163,8 +163,8 @@ spec:
               cpu: 50m
               memory: 51Mi
             limits:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 500m
+              memory: 512Mi
           ports:
             - containerPort: 3000
           imagePullPolicy: IfNotPresent
@@ -234,11 +234,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 100m
-          memory: 100Mi
+          cpu: 1000m
+          memory: 1024Mi
         requests:
           cpu: 100m
-          memory: 100Mi
+          memory: 102Mi
       serviceAccountName: ${{ defaults.app_name }}-redis
   terminationPolicy: Delete
   tolerations: []

@@ -226,11 +226,11 @@ spec:
               containerPort: 9001
           resources:
             limits:
-              cpu: 300m
-              memory: 512Mi
+              cpu: 1000m
+              memory: 2048Mi
             requests:
               cpu: 100m
-              memory: 256Mi
+              memory: 204Mi
           volumeMounts:
             - name: data
               mountPath: /data
@@ -304,11 +304,11 @@ spec:
               value: "true"
           resources:
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1000m
+              memory: 1024Mi
             requests:
               cpu: 100m
-              memory: 128Mi
+              memory: 102Mi
 
 ---
 apiVersion: v1
@@ -400,11 +400,11 @@ spec:
               value: "false"
           resources:
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 2000m
+              memory: 2048Mi
             requests:
-              cpu: 250m
-              memory: 256Mi
+              cpu: 200m
+              memory: 204Mi
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -573,11 +573,11 @@ spec:
             ]
           resources:
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 2000m
+              memory: 2048Mi
             requests:
-              cpu: 250m
-              memory: 256Mi
+              cpu: 200m
+              memory: 204Mi
       restartPolicy: OnFailure
 ---
 apiVersion: app.claw.cloud/v1

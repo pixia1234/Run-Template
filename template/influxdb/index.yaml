@@ -213,8 +213,8 @@ spec:
               memory: 1024Mi
             requests:
               cpu: 100m
-              ephemeral-storage: 50Mi
-              memory: 128Mi
+              ephemeral-storage: 1024Mi
+              memory: 102Mi
           volumeMounts:
             - name: empty-dir
               mountPath: /tmp

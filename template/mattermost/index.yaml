@@ -77,10 +77,10 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 256Mi
+              memory: 204Mi
             limits:
               cpu: 1000m
-              memory: 1Gi
+              memory: 2048Mi
           ports:
             - containerPort: 8065
           volumeMounts: []

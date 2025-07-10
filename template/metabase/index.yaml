@@ -85,11 +85,11 @@ spec:
                   key: host
           resources:
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 1000m
+              memory: 1024Mi
             requests:
-              cpu: 200m
-              memory: 200Mi
+              cpu: 100m
+              memory: 102Mi
           ports:
             - containerPort: 3000
           imagePullPolicy: IfNotPresent
