@@ -72,7 +72,7 @@ spec:
               memory: 64Mi
             limits:
               cpu: 200m
-              memory: 128Mi
+              memory: 640Mi
           ports:
             - containerPort: 21115
               protocol: TCP

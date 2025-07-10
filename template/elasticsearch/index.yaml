@@ -243,11 +243,11 @@ spec:
               containerPort: 9300
           resources:
             limits:
-              cpu: 1000m
-              memory: 2Gi
+              cpu: 2000m
+              memory: 5Gi
             requests:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 200m
+              memory: 512Mi
           env:
             - name: node.name
               valueFrom:
