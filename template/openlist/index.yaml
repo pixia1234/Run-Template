@@ -43,7 +43,7 @@ kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}
   annotations:
-    originImageName: ghcr.io/openlistteam/openlist-git:beta-aria2
+    originImageName: ghcr.io/openlistteam/openlist-git:latest-lite-aria2
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -66,7 +66,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ${{ defaults.app_name }}
-          image: ghcr.io/openlistteam/openlist-git:beta-aria2
+          image: ghcr.io/openlistteam/openlist-git:latest-lite-aria2
           env:
             - name: TZ
               value: Asia/Shanghai
