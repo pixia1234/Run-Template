@@ -31,7 +31,7 @@ kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}
   annotations:
-    originImageName: n8nio/n8n:1.98.1
+    originImageName: n8nio/n8n:stable
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
