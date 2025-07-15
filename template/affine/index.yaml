@@ -85,8 +85,6 @@ spec:
           image: ghcr.io/toeverything/affine-graphql:stable-e98f035
           command: ['sh', '-c', 'node ./scripts/self-host-predeploy && node ./dist/index.js']
           env:
-            - name: NODE_OPTIONS
-              value: "--import=./scripts/register.js"
             - name: AFFINE_CONFIG_PATH
               value: /root/.affine/config
             - name: REDIS_SERVER_HOST
