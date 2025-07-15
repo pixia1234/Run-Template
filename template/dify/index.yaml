@@ -1160,14 +1160,14 @@ metadata:
     - cluster.kubeblocks.io/finalizer
   labels:
     clusterdefinition.kubeblocks.io/name: weaviate
-    clusterversion.kubeblocks.io/name: weaviate-1.23.1
+    clusterversion.kubeblocks.io/name: weaviate-1.18.0
   name: ${{ defaults.app_name }}-weaviate
 spec:
   affinity:
     podAntiAffinity: Preferred
     tenancy: SharedNode
   clusterDefinitionRef: weaviate
-  clusterVersionRef: weaviate-1.23.1
+  clusterVersionRef: weaviate-1.18.0
   componentSpecs:
     - componentDefRef: weaviate
       monitor: false
