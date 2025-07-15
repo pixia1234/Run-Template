@@ -59,7 +59,7 @@ kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}
   annotations:
-    originImageName: ghcr.io/toeverything/affine-graphql:stable-e043ecf
+    originImageName: ghcr.io/toeverything/affine-graphql:stable-e98f035
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -83,7 +83,7 @@ spec:
       containers:
         - name: ${{ defaults.app_name }}
           image: ghcr.io/toeverything/affine-graphql:stable-e98f035
-          command: ['sh', '-c', 'node ./scripts/self-host-predeploy && node ./dist/index.js']
+          command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js && node ./dist/main.js']
           env:
             - name: AFFINE_CONFIG_PATH
               value: /root/.affine/config
