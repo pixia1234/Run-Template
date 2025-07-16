@@ -1,0 +1,602 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: monkeycode
+spec:
+  title: "MonkeyCode"
+  type: official
+  author: ClawCloud Run
+  author_id: 180503656
+  date: 2025-07-15
+  url: 'https://monkeycode.docs.baizhi.cloud/welcome'
+  gitRepo: 'https://github.com/chaitin/MonkeyCode'
+  description: 'MonkeyCode is a backend service and static frontend demonstration system based on Postgres and Redis.'
+  icon: 'https://monkeycode.docs.baizhi.cloud/static-file/1fceed57-f8b3-4404-8676-3ee2a3ee5b65/16d4e408-021e-430d-94cb-d75cd55d8351.png'
+  templateType: inline
+  locale: en
+  categories:
+    - ai
+  defaults:
+    app_name:
+      type: string
+      value: monkeycode-${{ random(8) }}
+    app_host:
+      type: string
+      value: ${{ random(8) }}
+    app_host_server:
+      type: string
+      value: ${{ random(8) }}
+    init_model_key:
+      type: string
+      value: sk-${{ random(45) }}
+  inputs:
+    admin_user:
+      description: "应用管理员用户名"
+      type: string
+      default: admin
+      required: true
+    admin_password:
+      description: "应用管理员密码"
+      type: string
+      required: true
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${{ defaults.app_name }}
+data:
+  nginx.conf: |
+    worker_processes auto;
+    user nginx nginx;
+
+    events {
+        worker_connections 4096;
+    }
+
+    http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+
+        log_format main '$remote_addr - $remote_user [$time_local] $status "$request" $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for" "$host"';
+
+        error_log /var/log/nginx/error.log error;
+        access_log /var/log/nginx/access.log main;
+
+        sendfile on;
+        keepalive_timeout 65;
+        client_body_buffer_size 128k;
+        client_header_buffer_size 2k;
+
+        gzip on;
+        gzip_types application/javascript text/css image/png image/jpeg image/gif;
+
+        upstream backend {
+            server ${{ defaults.app_name }}-server:8888;
+        }
+
+        server {
+            listen 80;
+            listen [::]:80;
+            server_name _;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            location / {
+                root /usr/share/nginx/html;
+                index index.html index.htm;
+                try_files $uri $uri/ /index.html;
+            }
+
+            location /api {
+                proxy_pass http://backend;
+            }
+
+            location /v1 {
+                proxy_pass http://backend;
+            }
+
+            location /v1/chat/completions {
+                proxy_pass http://backend;
+                proxy_http_version 1.1;
+                proxy_set_header Connection "";
+                proxy_buffering off;
+                proxy_cache off;
+                proxy_read_timeout 24h; 
+                proxy_connect_timeout 24h; 
+                proxy_send_timeout 24h;
+                keepalive_timeout 65;
+            }
+        }
+    }
+
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${{ defaults.app_name }}-server
+  annotations:
+    originImageName: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/monkeycode/backend:v0.12.0
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-server
+    app: ${{ defaults.app_name }}-server
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  minReadySeconds: 10
+  serviceName: ${{ defaults.app_name }}-server
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-server
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-server
+    spec:
+      terminationGracePeriodSeconds: 10
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-server
+          image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/monkeycode/backend:v0.12.0
+          env:
+            - name: MONKEYCODE_BASE_URL
+              value: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+            - name: MONKEYCODE_ADMIN_USER
+              value: ${{ inputs.admin_user }}
+            - name: MONKEYCODE_ADMIN_PASSWORD
+              value: ${{ inputs.admin_password }}
+            - name: PG_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: username
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: password
+            - name: PG_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: port
+            - name: MONKEYCODE_DATABASE_MASTER
+              value: postgresql://$(PG_USERNAME):$(PG_PASSWORD)@${{ defaults.app_name }}-pg-postgresql.${{ CLAWCLOUD_NAMESPACE }}.svc:$(PG_PORT)?sslmode=disable&timezone=Asia/Shanghai
+            - name: MONKEYCODE_DATABASE_SLAVE
+              value: postgresql://$(PG_USERNAME):$(PG_PASSWORD)@${{ defaults.app_name }}-pg-postgresql.${{ CLAWCLOUD_NAMESPACE }}.svc:$(PG_PORT)?sslmode=disable&timezone=Asia/Shanghai
+            - name: MONKEYCODE_REDIS_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: password
+            - name: MONKEYCODE_REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: host
+            - name: MONKEYCODE_REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: port
+            - name: MONKEYCODE_REDIS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-redis-conn-credential
+                  key: username
+            - name: MONKEYCODE_INIT_MODEL_KEY
+              value: ${{ defaults.init_model_key }}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 102Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 8888
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+            - name: static
+              mountPath: /app/static
+  volumeClaimTemplates:
+    - metadata:
+        annotations:
+          path: /app/logs
+          value: '1'
+        name: logs
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+    - metadata:
+        annotations:              
+          path: /app/static           
+          value: '1'            
+        name: static
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:                
+            storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}-frontend
+  annotations:
+    originImageName: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/monkeycode/frontend:v0.12.0
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-frontend
+    app: ${{ defaults.app_name }}-frontend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}-frontend
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}-frontend
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}-frontend
+          imagePullPolicy: IfNotPresent
+          image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/monkeycode/frontend:v0.12.0
+          resources:
+            requests:
+              cpu: 50m
+              memory: 102Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          command: []
+          args: []
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: ${{ defaults.app_name }}
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-server
+spec:
+  selector:
+    app: ${{ defaults.app_name }}-server
+  ports:
+    - port: 8888
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}-frontend
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-frontend
+spec:
+  selector:
+    app: ${{ defaults.app_name }}-frontend
+  ports:
+    - port: 80
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}-frontend
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-frontend
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${{ defaults.app_name }}-frontend
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}-server
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-server
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host_server }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    higress.io/response-header-control-remove: X-Frame-Options
+    higress.io/response-header-control-update: |
+      Content-Security-Policy "default-src * blob: data: *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }}; img-src * data: blob: resource: *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }}; connect-src * wss: blob: resource:; style-src 'self' 'unsafe-inline' blob: *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }} resource:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }} resource: *.baidu.com *.bdstatic.com; frame-src 'self' *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }} mailto: tel: weixin: mtt: *.baidu.com; frame-ancestors 'self' https://${{ CLAWCLOUD_CLOUD_DOMAIN }} https://*.${{ CLAWCLOUD_CLOUD_DOMAIN }}"
+      X-Xss-Protection "1; mode=block"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_clear_headers "X-Frame-Options:";
+      more_set_headers "Content-Security-Policy: default-src * blob: data: *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }}; img-src * data: blob: resource: *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }}; connect-src * wss: blob: resource:; style-src 'self' 'unsafe-inline' blob: *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }} resource:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }} resource: *.baidu.com *.bdstatic.com; frame-src 'self' *.${{ CLAWCLOUD_CLOUD_DOMAIN }} ${{ CLAWCLOUD_CLOUD_DOMAIN }} mailto: tel: weixin: mtt: *.baidu.com; frame-ancestors 'self' https://${{ CLAWCLOUD_CLOUD_DOMAIN }} https://*.${{ CLAWCLOUD_CLOUD_DOMAIN }}";
+      more_set_headers "X-Xss-Protection: 1; mode=block";
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, DELETE, PATCH, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://${{ CLAWCLOUD_CLOUD_DOMAIN }}, https://*.${{ CLAWCLOUD_CLOUD_DOMAIN }}"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Range, Authorization, X-App-Code"
+    nginx.ingress.kubernetes.io/cors-max-age: "600"
+spec:
+  rules:
+    - host: ${{ defaults.app_host_server }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}-server
+                port:
+                  number: 8888
+  tls:
+    - hosts:
+        - ${{ defaults.app_host_server }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: apps.kubeblocks.io/v1alpha1
+kind: Cluster
+metadata:
+  finalizers:
+    - cluster.kubeblocks.io/finalizer
+  labels:
+    clusterdefinition.kubeblocks.io/name: postgresql
+    clusterversion.kubeblocks.io/name: postgresql-14.8.0
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+  annotations: {}
+  name: ${{ defaults.app_name }}-pg
+spec:
+  affinity:
+    nodeLabels: {}
+    podAntiAffinity: Preferred
+    tenancy: SharedNode
+    topologyKeys: []
+  clusterDefinitionRef: postgresql
+  clusterVersionRef: postgresql-14.8.0
+  componentSpecs:
+    - componentDefRef: postgresql
+      monitor: true
+      name: postgresql
+      replicas: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 25m
+          memory: 25Mi
+      serviceAccountName: ${{ defaults.app_name }}-pg
+      switchPolicy:
+        type: Noop
+      volumeClaimTemplates:
+        - name: data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+
+  terminationPolicy: Delete
+  tolerations: []
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - '*'
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ${{ defaults.app_name }}-pg
+subjects:
+  - kind: ServiceAccount
+    name: ${{ defaults.app_name }}-pg
+
+---
+
+apiVersion: apps.kubeblocks.io/v1alpha1
+kind: Cluster
+metadata:
+  finalizers:
+    - cluster.kubeblocks.io/finalizer
+  labels:
+    clusterdefinition.kubeblocks.io/name: redis
+    clusterversion.kubeblocks.io/name: redis-7.0.6
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+  annotations: {}
+  name: ${{ defaults.app_name }}-redis
+spec:
+  affinity:
+    nodeLabels: {}
+    podAntiAffinity: Preferred
+    tenancy: SharedNode
+    topologyKeys: []
+  clusterDefinitionRef: redis
+  clusterVersionRef: redis-7.0.6
+  componentSpecs:
+    - componentDefRef: redis
+      monitor: true
+      name: redis
+      replicas: 1
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1024Mi
+        requests:
+          cpu: 100m
+          memory: 102Mi
+      serviceAccountName: ${{ defaults.app_name }}-redis
+      switchPolicy:
+        type: Noop
+      volumeClaimTemplates:
+        - name: data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 3Gi
+
+    - componentDefRef: redis-sentinel
+      monitor: true
+      name: redis-sentinel
+      replicas: 1
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1024Mi
+        requests:
+          cpu: 100m
+          memory: 102Mi
+      serviceAccountName: ${{ defaults.app_name }}-redis
+  terminationPolicy: Delete
+  tolerations: []
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-redis
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-redis
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ${{ defaults.app_name }}-redis
+subjects:
+  - kind: ServiceAccount
+    name: ${{ defaults.app_name }}-redis
+
+---
+apiVersion: app.claw.cloud/v1
+kind: App
+metadata:
+  name: ${{ defaults.app_name }}-frontend
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}-frontend
+spec:
+  data:
+    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+  displayType: normal
+  icon: "https://monkeycode.docs.baizhi.cloud/static-file/1fceed57-f8b3-4404-8676-3ee2a3ee5b65/16d4e408-021e-430d-94cb-d75cd55d8351.png"
+  name: ${{ defaults.app_name }}
+  type: link
