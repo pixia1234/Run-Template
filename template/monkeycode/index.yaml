@@ -31,12 +31,12 @@ spec:
       value: sk-${{ random(45) }}
   inputs:
     admin_user:
-      description: "应用管理员用户名"
+      description: "Admin Username"
       type: string
       default: admin
       required: true
     admin_password:
-      description: "应用管理员密码"
+      description: "Admin Password"
       type: string
       required: true
 
