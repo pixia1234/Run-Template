@@ -7,6 +7,7 @@ Komari is a lightweight self-hosted server monitoring tool designed to provide a
 #### Username and Password
 
 > **Default Username:** Admin
+> 
 > **Default Password:** The username and password you set during application installation
 
 For security purposes, please change the default username and password before using the application formally. Choose a strong and secure password.
