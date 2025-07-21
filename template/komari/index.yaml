@@ -1,0 +1,157 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: komari
+spec:
+  title: 'Komari'
+  type: official
+  author: ClawCloud Run
+  author_id: 61506351
+  date: 2025-07-21
+  url: 'https://github.com/komari-monitor/komari'
+  gitRepo: 'https://github.com/komari-monitor/komari'
+  description: 'Komari is a lightweight self-hosted server monitoring tool.'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/komari/README.md'
+  icon: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/komari/komari.png'
+  templateType: inline
+  categories:
+    - tool
+  defaults:
+    app_host:
+      # number or string..
+      type: string
+      value: ${{ random(8) }}
+    app_name:
+      type: string
+      value: komari-${{ random(8) }}
+  inputs:
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${{ defaults.app_name }}
+  annotations:
+    originImageName: ghcr.io/komari-monitor/komari:1.0.0
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  minReadySeconds: 10
+  serviceName: ${{ defaults.app_name }}
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}
+          image: ghcr.io/komari-monitor/komari:1.0.0
+          env: []
+          resources:
+            requests:
+              cpu: 20m
+              memory: 25Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          command: []
+          args: []
+          ports:
+            - containerPort: 25774
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: komari-disk
+              mountPath: /app/data
+      volumes: []
+  volumeClaimTemplates:
+    - metadata:
+        annotations:
+          path: /app/data
+          value: '1'
+        name: komari-disk
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  ports:
+    - port: 25774
+  selector:
+    app: ${{ defaults.app_name }}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 64m
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-gzip: "true"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_uri ~* \.(js|css|gif|jpe?g|png|webp|avif|svg|ico|woff|woff2|ttf|eot|otf)) {
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+      }
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /()(.*)
+            backend:
+              service:
+                name: ${{ defaults.app_name }}
+                port:
+                  number: 25774
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: app.claw.cloud/v1
+kind: App
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  data:
+    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+  displayType: normal
+  icon: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/komari/komari.png'
+  name: ${{ defaults.app_name }}
+  type: link
