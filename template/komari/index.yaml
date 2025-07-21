@@ -25,6 +25,11 @@ spec:
       type: string
       value: komari-${{ random(8) }}
   inputs:
+    PASSWORD:
+        description: "Admin Password"
+        type: string
+        default: "clawadmin123"
+        required: true
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -55,7 +60,9 @@ spec:
       containers:
         - name: ${{ defaults.app_name }}
           image: ghcr.io/komari-monitor/komari:1.0.0
-          env: []
+          env:
+            - name: ADMIN_PASSWORD
+              value: ${{ inputs.PASSWORD }}
           resources:
             requests:
               cpu: 20m
