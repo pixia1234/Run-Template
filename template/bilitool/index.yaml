@@ -61,8 +61,8 @@ spec:
               value: Asia/Shanghai
           resources:
             requests:
-              cpu: 250m
-              memory: 512Mi
+              cpu: 25m
+              memory: 51Mi
             limits:
               cpu: 500m
               memory: 1024Mi
@@ -141,3 +141,18 @@ spec:
     - hosts:
         - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
       secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+---
+
+apiVersion: app.claw.cloud/v1
+kind: App
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  data:
+    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+  displayType: normal
+  icon: "https://raw.githubusercontent.com/RayWangQvQ/BiliBiliToolPro/refs/heads/main/src/Ray.BiliBiliTool.Web/wwwroot/favicon.png"
+  name: bilitool
+  type: link
