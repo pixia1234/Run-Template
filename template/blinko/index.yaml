@@ -1,0 +1,260 @@
+apiVersion: app.claw.cloud/v1
+kind: Template
+metadata:
+  name: blinko
+spec:
+  title: 'Blinko'
+  type: official
+  author: ClawCloud Run
+  author_id: 180503656
+  date: 2025-07-24
+  url: 'https://blinko.space/'
+  gitRepo: 'https://github.com/blinkospace/blinko'
+  description: 'An open-source, self-hosted personal AI note tool prioritizing privacy, built using TypeScript.'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/blinko/README.md'
+  icon: 'https://avatars.githubusercontent.com/u/210232737?s=48&v=4'
+  templateType: inline
+  locale: en
+  categories:
+    - ai
+  defaults:
+    app_host:
+      type: string
+      value: ${{ random(8) }}
+    app_name:
+      type: string
+      value: blinko-${{ random(8) }}
+  inputs:
+    nextauth_secret:
+      description: 'NextAuth.js secret key for session encryption.'
+      type: string
+      default: ${{ random(32) }}
+      required: true
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ defaults.app_name }}
+  annotations:
+    originImageName: blinkospace/blinko:1.2.2
+    deploy.run.claw.cloud/minReplicas: '1'
+    deploy.run.claw.cloud/maxReplicas: '1'
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    app: ${{ defaults.app_name }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ${{ defaults.app_name }}
+  template:
+    metadata:
+      labels:
+        app: ${{ defaults.app_name }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: ${{ defaults.app_name }}
+          image: blinkospace/blinko:1.2.2
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: NEXTAUTH_URL
+              value: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+            - name: NEXT_PUBLIC_BASE_URL
+              value: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+            - name: NEXTAUTH_SECRET
+              value: ${{ inputs.nextauth_secret }}
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${{ defaults.app_name }}-pg-conn-credential
+                  key: password
+            - name: DATABASE_URL
+              value: >-
+                postgresql://postgres:$(PG_PASSWORD)@${{ defaults.app_name }}-pg-postgresql.${{ CLAWCLOUD_NAMESPACE }}.svc:5432/postgres
+          resources:
+            requests:
+              cpu: 50m
+              memory: 102Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          command: []
+          args: []
+          ports:
+            - containerPort: 1111
+          imagePullPolicy: IfNotPresent
+          volumeMounts: []
+      volumes: []
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  ports:
+    - port: 1111
+  selector:
+    app: ${{ defaults.app_name }}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}
+                port:
+                  number: 1111
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: apps.kubeblocks.io/v1alpha1
+kind: Cluster
+metadata:
+  finalizers:
+    - cluster.kubeblocks.io/finalizer
+  labels:
+    clusterdefinition.kubeblocks.io/name: postgresql
+    clusterversion.kubeblocks.io/name: postgresql-14.8.0
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+  annotations: {}
+  name: ${{ defaults.app_name }}-pg
+spec:
+  affinity:
+    nodeLabels: {}
+    podAntiAffinity: Preferred
+    tenancy: SharedNode
+    topologyKeys: []
+  clusterDefinitionRef: postgresql
+  clusterVersionRef: postgresql-14.8.0
+  backup:
+    enabled: true
+    cronExpression: 0 18 * * *
+    method: backupTool
+    pitrEnabled: false
+    retentionPeriod: 7d
+  componentSpecs:
+    - componentDefRef: postgresql
+      monitor: true
+      name: postgresql
+      replicas: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 25m
+          memory: 51Mi
+      serviceAccountName: ${{ defaults.app_name }}-pg
+      switchPolicy:
+        type: Noop
+      volumeClaimTemplates:
+        - name: data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+
+  terminationPolicy: Delete
+  tolerations: []
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - '*'
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    clawcloud-db-provider-cr: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/instance: ${{ defaults.app_name }}-pg
+    app.kubernetes.io/managed-by: kbcli
+  name: ${{ defaults.app_name }}-pg
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ${{ defaults.app_name }}-pg
+subjects:
+  - kind: ServiceAccount
+    name: ${{ defaults.app_name }}-pg
+
+---
+
+apiVersion: app.claw.cloud/v1
+kind: App
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  data:
+    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+  displayType: normal
+  icon: "https://avatars.githubusercontent.com/u/210232737?s=48&v=4"
+  name: ${{ defaults.app_name }}
+  type: link
+
