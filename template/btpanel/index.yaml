@@ -25,6 +25,7 @@ spec:
 
 ---
 
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -57,35 +58,40 @@ spec:
         - containerPort: 22
         - containerPort: 21
         volumeMounts:
-        - name: www-volume
+        - name: vn-wwwvn-wwwroot
           mountPath: /www/wwwroot
-        - name: data-volume
+        - name: vn-wwwvn-servervn-data
           mountPath: /www/server/data
         resources:
           requests:
-            cpu: 500m
-            memory: 512Mi
-            ephemeral-storage: 500Mi
+            cpu: 200m
+            memory: 204Mi
           limits:
-            cpu: 5000m
-            memory: 5120Mi
-            ephemeral-storage: 5Gi
+            cpu: 2000m
+            memory: 2048Mi
   volumeClaimTemplates:
-  - metadata:
-      name: www-volume
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 100Mi
-  - metadata:
-      name: data-volume
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 100Mi
-
+    - metadata:
+        annotations:
+          path: /www/wwwroot
+          value: '1'
+        name: vn-wwwvn-wwwroot
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+    - metadata:
+        annotations:
+          path: /www/server/data
+          value: '1'
+        name: vn-wwwvn-servervn-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
 ---
 
 apiVersion: v1
@@ -108,7 +114,9 @@ spec:
     port: 21
     targetPort: 21
   type: NodePort
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -126,6 +134,47 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: ${{ defaults.app_name }}-redirect
+  labels:
+    run.claw.cloud/app-deploy-manager-domain: ${{ defaults.app_host }}
+  annotations:
+    nginx.ingress.kubernetes.io/temporal-redirect: 'https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}/btpanel'
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 32m
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 64k;
+      large_client_header_buffers 4 128k;
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_uri ~* \.(js|css|gif|jpe?g|png)) {
+        expires 30d;
+        add_header Cache-Control "public";
+      }
+spec:
+  rules:
+    - host: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      http:
+        paths:
+          - pathType: Exact
+            path: /
+            backend:
+              service:
+                name: ${{ defaults.app_name }}
+                port:
+                  number: 8888
+  tls:
+    - hosts:
+        - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+      secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: ${{ defaults.app_name }}
   labels:
     run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
@@ -136,9 +185,8 @@ metadata:
     nginx.ingress.kubernetes.io/server-snippet: |
       client_header_buffer_size 64k;
       large_client_header_buffers 4 128k;
-    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/client-body-buffer-size: 64k
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -152,7 +200,7 @@ spec:
       http:
         paths:
           - pathType: Prefix
-            path: /()(.*)
+            path: /
             backend:
               service:
                 name: ${{ defaults.app_name }}
@@ -173,7 +221,7 @@ metadata:
     run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
 spec:
   data:
-    url: ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
   displayType: normal
   icon: "https://www.bt.cn/static/new/images/logo_03.svg"
   name: "btpanel"
