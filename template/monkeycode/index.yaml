@@ -10,8 +10,13 @@ spec:
   date: 2025-07-15
   url: 'https://monkeycode.docs.baizhi.cloud/welcome'
   gitRepo: 'https://github.com/chaitin/MonkeyCode'
-  description: 'MonkeyCode is a backend service and static frontend demonstration system based on Postgres and Redis.'
+  description: 'MonkeyCode is a Enterprise-grade AI programming assistant with support for private offline deployment, compatibility with third-party and localized big models, enterprise-grade management panel, and code security features.'
   icon: 'https://monkeycode.docs.baizhi.cloud/static-file/1fceed57-f8b3-4404-8676-3ee2a3ee5b65/16d4e408-021e-430d-94cb-d75cd55d8351.png'
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/monkeycode/README.md'
+  images:
+    - 'https://raw.githubusercontent.com/chaitin/MonkeyCode/refs/heads/main/images/screenshot-1.png'
+    - 'https://raw.githubusercontent.com/chaitin/MonkeyCode/refs/heads/main/images/screenshot-2.png'
+    - 'https://raw.githubusercontent.com/chaitin/MonkeyCode/refs/heads/main/images/screenshot-3.png'
   templateType: inline
   locale: en
   categories:
@@ -167,7 +172,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ${{ defaults.app_name }}-server
-          image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/monkeycode/backend:v0.12.0
+          image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/monkeycode/backend:v1.1.0
           env:
             - name: MONKEYCODE_BASE_URL
               value: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
@@ -218,10 +223,10 @@ spec:
               value: ${{ defaults.init_model_key }}
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 102Mi
             limits:
-              cpu: 1000m
+              cpu: 500m
               memory: 1024Mi
           ports:
             - name: http
@@ -285,14 +290,14 @@ spec:
       containers:
         - name: ${{ defaults.app_name }}-frontend
           imagePullPolicy: IfNotPresent
-          image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/monkeycode/frontend:v0.12.0
+          image: chaitin-registry.cn-hangzhou.cr.aliyuncs.com/monkeycode/frontend:v1.1.0
           resources:
             requests:
-              cpu: 50m
-              memory: 102Mi
+              cpu: 20m
+              memory: 51Mi
             limits:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 200m
+              memory: 512Mi
           command: []
           args: []
           ports:
@@ -520,11 +525,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 1000m
-          memory: 1024Mi
+          cpu: 500m
+          memory: 512Mi
         requests:
-          cpu: 100m
-          memory: 102Mi
+          cpu: 50m
+          memory: 52Mi
       serviceAccountName: ${{ defaults.app_name }}-redis
       switchPolicy:
         type: Noop
@@ -543,11 +548,11 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 1000m
-          memory: 1024Mi
+          cpu: 500m
+          memory: 512Mi
         requests:
-          cpu: 100m
-          memory: 102Mi
+          cpu: 50m
+          memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-redis
   terminationPolicy: Delete
   tolerations: []
