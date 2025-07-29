@@ -15,7 +15,7 @@ spec:
   icon: 'https://n8n.io/favicon.ico'
   templateType: inline
   categories:
-    - tool
+    - ai
     - Free-Plan-Compatible
   defaults:
     app_host:

@@ -16,8 +16,7 @@ spec:
   templateType: inline
   locale: en
   categories:
-    - collaboration
-    - productivity
+    - dev-ops
   defaults:
     app_name:
       type: string

@@ -15,10 +15,9 @@ spec:
   icon: 'https://min.io/resources/favs/apple-icon-180x180.png'
   templateType: inline
   categories:
-    - storage
+    - dev-ops
   defaults:
     app_host:
-      # number or string.
       type: string
       value: ${{ random(8) }}
     app_name:

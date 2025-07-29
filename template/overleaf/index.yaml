@@ -18,7 +18,6 @@ spec:
     - tool
   defaults:
     app_host:
-      # number or string..
       type: string
       value: overleaf-${{ random(8) }}
     app_name:

@@ -12,12 +12,11 @@ spec:
   gitRepo: 'https://github.com/coaidev/coai'
   description: 'Next Generation AI One-Stop Internationalization Solution.'
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/chatnio/README.md'
-  icon: 'https://www.coai.dev/logo.png'
+  icon: 'https://avatars.githubusercontent.com/u/125332171?s=48&v=4'
   templateType: inline
   locale: en
   categories:
     - ai
-    - tool
   defaults:
     app_name:
       type: string
@@ -437,6 +436,6 @@ spec:
   data:
     url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
   displayType: normal
-  icon: "https://www.coai.dev/logo.png"
+  icon: "hhttps://avatars.githubusercontent.com/u/125332171?s=48&v=4"
   name: ${{ defaults.app_name }}
   type: link

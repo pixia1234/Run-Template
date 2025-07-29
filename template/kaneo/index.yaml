@@ -12,7 +12,7 @@ spec:
   gitRepo: https://github.com/usekaneo/kaneo                        
   description: 'A modern, self-hosted project management platform that gets out of your way.'        
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/kaneo/README.md'
-  icon: 'https://raw.githubusercontent.com/usekaneo/kaneo/refs/heads/main/apps/web/public/apple-icon-180x180.png'            
+  icon: 'https://avatars.githubusercontent.com/u/192649426?s=48&v=4'            
   templateType: inline
   locale: en
   categories:
@@ -353,6 +353,6 @@ spec:
   data:
     url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
   displayType: normal
-  icon: https://raw.githubusercontent.com/usekaneo/kaneo/refs/heads/main/apps/web/public/apple-icon-180x180.png
+  icon: https://avatars.githubusercontent.com/u/192649426?s=48&v=4
   name: "Kaneo"
   type: link

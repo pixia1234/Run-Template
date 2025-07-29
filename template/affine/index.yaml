@@ -20,7 +20,6 @@ spec:
   templateType: inline
   categories:
     - tool
-    - Free-Plan-Compatible
   defaults:
     app_host:
       type: string
@@ -114,10 +113,10 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 204Mi
+              memory: 102Mi
             limits:
-              cpu: 1000m
-              memory: 2048Mi
+              cpu: 500m
+              memory: 1024Mi
           ports:
             - name: http
               protocol: TCP
@@ -233,8 +232,8 @@ spec:
           cpu: 500m
           memory: 512Mi
         requests:
-          cpu: 25m
-          memory: 25Mi
+          cpu: 50m
+          memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-pg
       switchPolicy:
         type: Noop

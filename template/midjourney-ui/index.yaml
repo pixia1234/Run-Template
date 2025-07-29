@@ -19,7 +19,6 @@ spec:
   draft: true
   defaults:
     app_host:
-      # number or string..
       type: string
       value: ${{ random(8) }}
     app_name:

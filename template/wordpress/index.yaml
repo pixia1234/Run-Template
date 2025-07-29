@@ -86,11 +86,11 @@ spec:
               value: mydb
           resources:
             requests:
-              cpu: 20m
-              memory: 25Mi
+              cpu: 40m
+              memory: 40Mi
             limits:
               cpu: 400m
-              memory: 512Mi
+              memory: 400Mi
           command: []
           args: []
           ports:
@@ -193,10 +193,10 @@ spec:
       resources:
         limits:
           cpu: 400m
-          memory: 512Mi
+          memory: 400Mi
         requests:
-          cpu: 20m
-          memory: 25Mi
+          cpu: 40m
+          memory: 40Mi
       serviceAccountName: ${{ defaults.app_name }}-mysql
       volumeClaimTemplates:
         - name: data

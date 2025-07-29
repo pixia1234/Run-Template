@@ -15,7 +15,7 @@ spec:
   icon: 'https://raw.githubusercontent.com/phpmyadmin/phpmyadmin/master/public/favicon.ico'
   templateType: inline
   categories:
-    - devops
+    - dev-ops
     - Free-Plan-Compatible
   defaults:
     app_name:
