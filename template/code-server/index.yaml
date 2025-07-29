@@ -15,10 +15,9 @@ spec:
   icon: 'https://raw.githubusercontent.com/coder/code-server/main/src/browser/media/favicon.svg'
   templateType: inline
   categories:
-    - tool
+    - dev-ops
   defaults:
     app_host:
-      # number or string..
       type: string
       value: ${{ random(8) }}
     app_name:

@@ -16,7 +16,8 @@ spec:
   templateType: inline
   locale: en
   categories:
-    - tool
+    - dev-ops
+    - Free-Plan-Compatible
   defaults:
     app_name:
       type: string
@@ -79,8 +80,8 @@ spec:
               cpu: 50m
               memory: 51Mi
             limits:
-              cpu: 1000m
-              memory: 1024Mi
+              cpu: 500m
+              memory: 512Mi
           ports:
             - containerPort: 3000
             - containerPort: 2222
@@ -253,10 +254,10 @@ spec:
       replicas: 1
       resources:
         limits:
-          cpu: 1000m
+          cpu: 500m
           memory: 512Mi
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 51Mi
       serviceAccountName: ${{ defaults.app_name }}-mysql
       volumeClaimTemplates:

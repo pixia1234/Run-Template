@@ -16,10 +16,9 @@ spec:
   templateType: inline
   locale: en
   categories:
-    - tool
+    - dev-ops
   defaults:
     app_host:
-      # number or string..
       type: string
       value: logto-${{ random(8) }}
     app_name:
