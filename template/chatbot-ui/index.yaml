@@ -16,9 +16,9 @@ spec:
   templateType: inline
   categories:
     - ai
+    - Free-Plan-Compatible
   defaults:
     app_host:
-      # number or string..
       type: string
       value: ${{ random(8) }}
     app_name:
@@ -30,7 +30,9 @@ spec:
       type: string
       default: ''
       required: false
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -101,6 +103,7 @@ spec:
       volumes: []
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -112,6 +115,7 @@ spec:
     - port: 3000
   selector:
     app: ${{ defaults.app_name }}
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -154,3 +158,19 @@ spec:
     - hosts:
         - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
       secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: app.claw.cloud/v1
+kind: App
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  data:
+    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+  displayType: normal
+  icon: "https://raw.githubusercontent.com/mckaywrigley/chatbot-ui/main/public/favicon.ico"
+  name: chatbot-ui
+  type: link

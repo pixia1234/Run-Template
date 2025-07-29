@@ -20,7 +20,6 @@ spec:
     - low-code
   defaults:
     app_host:
-      # number or string..
       type: string
       value: ${{ random(8) }}
     app_name:
@@ -33,7 +32,9 @@ spec:
       type: string
       value: ${{ random(16) }}
   inputs:
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:

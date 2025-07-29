@@ -19,6 +19,7 @@ spec:
   templateType: inline
   categories:
     - tool
+    - Free-Plan-Compatible
   defaults:
     app_host:
       type: string
@@ -26,7 +27,9 @@ spec:
     app_name:
       type: string
       value: webssh-${{ random(8) }}
+
 ---
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
