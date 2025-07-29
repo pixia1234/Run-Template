@@ -29,7 +29,9 @@ spec:
       type: string
       default: ''
       required: false
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -79,6 +81,7 @@ spec:
 
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -93,6 +96,7 @@ spec:
 
 
 ---
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -134,3 +138,19 @@ spec:
     - hosts:
         - ${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
       secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
+
+---
+
+apiVersion: app.claw.cloud/v1
+kind: App
+metadata:
+  name: ${{ defaults.app_name }}
+  labels:
+    run.claw.cloud/app-deploy-manager: ${{ defaults.app_name }}
+spec:
+  data:
+    url: https://${{ defaults.app_host }}.${{ CLAWCLOUD_CLOUD_DOMAIN }}
+  displayType: normal
+  icon: "https://avatars.githubusercontent.com/u/83310993?s=200&v=4"
+  name: DeeplX
+  type: link

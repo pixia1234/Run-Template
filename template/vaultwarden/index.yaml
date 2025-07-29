@@ -15,10 +15,10 @@ spec:
   icon: 'https://raw.githubusercontent.com/dani-garcia/vaultwarden/main/resources/vaultwarden-icon.svg'
   templateType: inline
   categories:
-    - tool
+    - dev-ops
+    - Free-Plan-Compatible
   defaults:
     app_host:
-      # number or string.
       type: string
       value: ${{ random(8) }}
     app_name:
@@ -27,6 +27,7 @@ spec:
   inputs:
 
 ---
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -87,6 +88,7 @@ spec:
             storage: 1Gi
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:

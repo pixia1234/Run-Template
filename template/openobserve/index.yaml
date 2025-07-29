@@ -14,6 +14,9 @@ spec:
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/openobserve/README.md'
   icon: 'https://openobserve.ai/favicon.svg'
   templateType: inline
+  categories:
+    - dev-ops
+    - Free-Plan-Compatible
   defaults:
     app_host:
       type: string
@@ -37,7 +40,9 @@ spec:
       type: string
       default: '/data'
       required: true
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -52,7 +57,9 @@ spec:
     - name: http
       port: 443
       targetPort: 5080
+
 ---
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -96,11 +103,11 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             limits:
-              cpu: 4096m
-              memory: 2048Mi
+              cpu: 1000m
+              memory: 512Mi
             requests:
-              cpu: 256m
-              memory: 50Mi
+              cpu: 100m
+              memory: 51Mi
           ports:
             - containerPort: 5080
               name: http
