@@ -16,10 +16,9 @@ spec:
   templateType: inline
   categories:
     - monitor
-    - tool
+    - Free-Plan-Compatible
   defaults:
     app_host:
-      # number or string.
       type: string
       value: ${{ random(8) }}
     app_name:

@@ -16,9 +16,9 @@ spec:
   templateType: inline
   categories:
     - tool
+    - Free-Plan-Compatible
   defaults:
     app_host:
-      # number or string..
       type: string
       value: n8n-${{ random(8) }}
     app_name:
@@ -75,8 +75,8 @@ spec:
               cpu: 50m
               memory: 102Mi
             limits:
-              cpu: 1000m
-              memory: 2048Mi
+              cpu: 500m
+              memory: 1024Mi
           ports:
             - name: http
               protocol: TCP
