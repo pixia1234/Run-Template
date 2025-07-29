@@ -17,6 +17,7 @@ spec:
   locale: en
   categories:
     - tool
+    - Free-Plan-Compatible
   defaults:
     app_host:
       type: string
