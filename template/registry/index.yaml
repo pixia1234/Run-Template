@@ -3,19 +3,21 @@ kind: Template
 metadata:
   name: registry
 spec:
-  gitRepo: https://github.com/distribution/distribution
-  templateType: inline
-  title: registry
+  title: Registry
   type: official
   author: ClawCloud Run
   author_id: 180503656
   date: 2025-04-17
   url: https://distribution.github.io/distribution
+  gitRepo: https://github.com/distribution/distribution
   description: >-
     registry is an implementation of the OCI Distribution Specification.
     gui-registry is a web UI for registry.
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/registry/README.md'
   icon: https://avatars.githubusercontent.com/u/78096003?s=48&v=4
+  templateType: inline
+  categories:
+    - tool
   defaults:
     app_name:
       type: string
@@ -23,8 +25,10 @@ spec:
     app_host:
       type: string
       value: ${{ random(8) }}
-  input: null
+  input:
+
 ---
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -260,6 +264,7 @@ spec:
           volumeMounts: []
       volumes: []
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -271,7 +276,9 @@ spec:
     - port: 80
   selector:
     app: gui-${{ defaults.app_name }}
+
 ---
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
