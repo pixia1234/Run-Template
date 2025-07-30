@@ -3,16 +3,16 @@ kind: Template
 metadata:
   name: freshrss
 spec:
-  title: 'FreshRSS'                            # App Name
-  type: community                             # Template type: official, developer, community
-  author: zouxingyuks                        # Template author
-  author_id: 102451468                       # Template author GitHub ID
-  date: 2025-05-07                           # Template submit date
-  url: 'https://freshrss.org'                  # App official website
-  gitRepo: 'https://github.com/FreshRSS/FreshRSS'  # App GitHub url
-  description: 'FreshRSS is a self-hosted RSS feed reader'  # App description
-  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/freshrss/README.md'  # App Readme url
-  icon: 'https://avatars.githubusercontent.com/u/9414285'     # App icon url
+  title: 'FreshRSS'                         
+  type: community                      
+  author: zouxingyuks                    
+  author_id: 102451468             
+  date: 2025-05-07                        
+  url: 'https://freshrss.org'            
+  gitRepo: 'https://github.com/FreshRSS/FreshRSS' 
+  description: 'FreshRSS is a self-hosted RSS feed reader' 
+  readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/freshrss/README.md' 
+  icon: 'https://avatars.githubusercontent.com/u/9414285'  
   templateType: inline
   categories:
     - tool
@@ -33,7 +33,7 @@ kind: StatefulSet
 metadata:
   name: ${{ defaults.app_name }}
   annotations:
-    originImageName: freshrss/freshrss:latest  # App docker image
+    originImageName: freshrss/freshrss:latest 
     deploy.run.claw.cloud/minReplicas: '1'
     deploy.run.claw.cloud/maxReplicas: '1'
   labels:
@@ -78,8 +78,6 @@ spec:
           volumeMounts:
             - name: vn-freshrss-config
               mountPath: /config
-            - name: vn-freshrss-extensions
-              mountPath: /app/www/extensions
       volumes: []
   volumeClaimTemplates:
     - metadata:
