@@ -14,7 +14,7 @@ spec:
   icon: 'https://upload.wikimedia.org/wikipedia/commons/5/59/TeamSpeak_logo.svg'
   templateType: inline
   categories:
-    - tool
+    - game
   defaults:
     app_host:
       type: string
@@ -33,6 +33,7 @@ spec:
       type: boolean
       default: "false"
       required: false
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet

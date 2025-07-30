@@ -15,7 +15,7 @@ spec:
   icon: 'https://docs.sealdice.com/images/sealdice.svg'
   templateType: inline
   categories:
-    - tool
+    - game
   defaults:
     app_host:
       type: string

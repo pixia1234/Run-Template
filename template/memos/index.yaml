@@ -14,6 +14,9 @@ spec:
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/memos/README.md'
   icon: 'https://raw.githubusercontent.com/usememos/memos/main/web/public/logo.webp'
   templateType: inline
+  categories:
+    - tool
+    - Free-Plan-Compatible
   defaults:
     app_host:
       type: string

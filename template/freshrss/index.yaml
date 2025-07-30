@@ -14,6 +14,9 @@ spec:
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/freshrss/README.md'  # App Readme url
   icon: 'https://avatars.githubusercontent.com/u/9414285'     # App icon url
   templateType: inline
+  categories:
+    - tool
+    - Free-Plan-Compatible
   defaults:
     app_host:
       type: string
@@ -22,7 +25,9 @@ spec:
       type: string
       value: freshrss-${{ random(8) }}
   inputs:
+
 ---
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

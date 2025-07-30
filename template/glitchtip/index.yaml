@@ -16,7 +16,6 @@ spec:
   templateType: inline
   categories:
     - monitor
-    - tool
   defaults:
     app_host:
       type: string
@@ -361,7 +360,9 @@ spec:
           imagePullPolicy: IfNotPresent
           volumeMounts: []
       volumes: []
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -409,6 +410,7 @@ spec:
       secretName: ${{ CLAWCLOUD_CERT_SECRET_NAME }}
 
 ---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -419,6 +421,7 @@ metadata:
   name: ${{ defaults.app_name }}-redis
 
 ---
+
 apiVersion: apps.kubeblocks.io/v1alpha1
 kind: Cluster
 metadata:
