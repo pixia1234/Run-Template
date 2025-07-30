@@ -17,6 +17,7 @@ spec:
   locale: en
   categories:
     - ai
+    - Free-Plan-Compatible
   defaults:
     app_name:
       type: string

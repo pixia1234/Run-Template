@@ -14,6 +14,8 @@ spec:
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/emqx/README.md'
   icon: 'https://avatars.githubusercontent.com/u/25221711?s=96&v=4'
   templateType: inline
+  categories:
+    - tool
   defaults:
     app_host:
       type: string
