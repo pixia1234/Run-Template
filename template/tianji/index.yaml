@@ -14,9 +14,10 @@ spec:
   readme: 'https://raw.githubusercontent.com/ClawCloud/Run-Template/refs/heads/main/template/tianji/README.md'
   icon: 'https://tianji.msgbyte.com/img/logo.svg'
   templateType: inline
+  categories:
+    - dev-ops
   defaults:
     app_host:
-      # number or string..
       type: string
       value: tianji-${{ random(8) }}
     app_name:

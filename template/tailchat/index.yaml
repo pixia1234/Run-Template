@@ -15,17 +15,16 @@ spec:
   icon: 'https://raw.githubusercontent.com/msgbyte/tailchat/master/website/static/img/logo.svg'
   templateType: inline
   locale: en
+  categories:
+    - tool
   defaults:
     app_host:
-      # number or string.
       type: string
       value: ${{ random(8) }}
     minio_host:
-      # number or string.
       type: string
       value: ${{ random(8) }}
     redis_host:
-      # number or string.
       type: string
       value: ${{ random(8) }}
     app_name:
