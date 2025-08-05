@@ -2,8 +2,8 @@
 
 This repository serves as the official template repository for **ClawCloud Run** - a cloud-native application deployment platform. The provided templates enable users to seamlessly deploy various applications on ClawCloud Run with one click. Explore more at [ClawCloud Run](https://run.claw.cloud/).
 
-## Submit request for template
-If you want to request for any specific template, you could submit your request by clicking [here](https://github.com/ClawCloud/Run-Template/issues/new?template=template_request.md)
+## Template Request
+If you want to request for any specific template, you could submit an issue by clicking [here](https://github.com/ClawCloud/Run-Template/issues/new?template=template_request.md).
 
 ## Template Structure
 
