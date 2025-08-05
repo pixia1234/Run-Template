@@ -61,11 +61,11 @@ spec:
               value: Asia/Shanghai
           resources:
             requests:
-              cpu: 25m
+              cpu: 20m
               memory: 51Mi
             limits:
-              cpu: 500m
-              memory: 1024Mi
+              cpu: 200m
+              memory: 512Mi
           command: []
           args: []
           ports:
