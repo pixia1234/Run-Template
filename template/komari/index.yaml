@@ -4,8 +4,8 @@ metadata:
   name: komari
 spec:
   title: 'Komari'
-  type: official
-  author: ClawCloud Run
+  type: community
+  author: yeagoo
   author_id: 61506351
   date: 2025-07-21
   url: 'https://github.com/komari-monitor/komari'
